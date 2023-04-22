@@ -2,3 +2,5 @@
 ## Environment
 + Visual Studio 2022
 + Cmake 3.8
++ vcpkg
++ crow.h
