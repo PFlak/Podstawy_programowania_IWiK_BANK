@@ -17,7 +17,7 @@ bool CreateTables::createUserTable() {
 }
 
 bool CreateTables::createAccountTable() {
-    const char* query = "CREATE TABLE IF NOT EXISTS accounts (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, balance INTEGER NOT NULL, FOREIGN KEY (user_id) REFERENCES
+    const char* query = "CREATE TABLE IF NOT EXISTS accounts (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, balance INTEGER NOT NULL, FOREIGN KEY (user_id) REFERENCES";
         char* errorMessage = nullptr;
     int result = sqlite3_exec(database, query, nullptr, nullptr, &errorMessage);
     if (result != SQLITE_OK) {
