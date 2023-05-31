@@ -76,7 +76,7 @@ bool CreateTables::createTransferTable() {
 	return true;
 }
 
-bool CreateTables::createTransactionsTable() {
+bool CreateTables::createTransactionTable() {
 	const char* query = R"(
         CREATE TABLE IF NOT EXISTS transactions (
             id INTEGER PRIMARY KEY,
