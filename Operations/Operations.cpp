@@ -76,7 +76,7 @@ bool Operations::editUserData(int userId, const std::string& newUserId) {
 
     // Bind the parameters to the query
     sqlite3_bind_int(statement, 1, userId);
-    sqlite3_bind_int(statement, 2, newUserId);
+    sqlite3_bind_int(statement, 2, newUserId); 
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);

@@ -13,15 +13,14 @@ project ("Podstawy_programowania_IWiK_BANK")
 
 # Add source to this project's executable.
 
-# add_subdirectory(db)
+add_subdirectory(CreateTables)
+add_subdirectory(DatabaseConnection)
+# add_subdirectory(Operations)
 
 add_executable (Podstawy_programowania_IWiK_BANK 
 "main/src/Podstawy_programowania_IWiK_BANK.cpp" 
 "main/src/Podstawy_programowania_IWiK_BANK.h" 
-"db/src/CreateTables.h" 
-"db/src/CreateTables.cpp"
-"db/src/DatabaseConnection.h" 
-"db/src/DatabaseConnection.cpp")
+)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Podstawy_programowania_IWiK_BANK PROPERTY CXX_STANDARD 20)
@@ -30,7 +29,11 @@ endif()
 # TODO: Add tests and install targets if needed.
 
 find_package(Crow CONFIG REQUIRED)
-find_package(unofficial-sqlite3 CONFIG REQUIRED)
+target_link_libraries(Podstawy_programowania_IWiK_BANK PRIVATE Crow::Crow)
 
-target_link_libraries(Podstawy_programowania_IWiK_BANK unofficial::sqlite3::sqlite3)
-target_link_libraries(Podstawy_programowania_IWiK_BANK Crow::Crow)
+
+target_include_directories(Podstawy_programowania_IWiK_BANK PUBLIC
+"${PROJECT_SOURCE_DIR}/CreateTables"
+"${PROJECT_SOURCE_DIR}/DatabaseConnection"
+#"${PROJECT_SOURCE_DIR}/Operations"
+)

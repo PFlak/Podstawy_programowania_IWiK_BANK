@@ -2,8 +2,8 @@
 
 #include "Podstawy_programowania_IWiK_BANK.h"
 #include <iostream>
-#include "../../db/src/CreateTables.h"
-#include "../../db/src/DatabaseConnection.h"
+#include "CreateTables.h"
+#include "DatabaseConnection.h"
 #include <sqlite3.h>
 #include "crow.h"
 
@@ -11,6 +11,7 @@
 int main(int argc, char* argv[])
 {
    
+    
 
     //API example method running on localhost:18080
     crow::SimpleApp app;
