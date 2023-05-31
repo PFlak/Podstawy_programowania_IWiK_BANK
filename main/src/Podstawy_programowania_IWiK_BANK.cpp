@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
         return "Hello world";
         });
 
-    app.port(18080).multithreaded().run();
+    app.bindaddr("0.0.0.0").port(18080).multithreaded().run();
 
 
 
