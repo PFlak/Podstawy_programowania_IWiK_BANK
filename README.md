@@ -13,7 +13,7 @@ The integration with CROW provides efficient routing, middleware support, and ro
 Users can interact with the API via http://localhost:18080
 
 Methods:
-+/api/create_user
-+/api/login_user
-+/api/logout_user
-+/api/check_balance
++ /api/create_user
++ /api/login_user
++ /api/logout_user
++ /api/check_balance
