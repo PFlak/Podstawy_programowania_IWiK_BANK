@@ -35,5 +35,6 @@ target_link_libraries(Podstawy_programowania_IWiK_BANK PRIVATE Crow::Crow)
 target_include_directories(Podstawy_programowania_IWiK_BANK PUBLIC
 "${PROJECT_SOURCE_DIR}/CreateTables"
 "${PROJECT_SOURCE_DIR}/DatabaseConnection"
+"${PROJECT_SOURCE_DIR}/Controllers"
 #"${PROJECT_SOURCE_DIR}/Operations"
 )
