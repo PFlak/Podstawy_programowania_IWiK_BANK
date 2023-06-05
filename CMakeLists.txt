@@ -22,7 +22,7 @@ add_subdirectory(Logger)
 add_executable (Podstawy_programowania_IWiK_BANK 
 "main/src/Podstawy_programowania_IWiK_BANK.cpp" 
 "main/src/Podstawy_programowania_IWiK_BANK.h" 
- "domain/Data.cpp")
+)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Podstawy_programowania_IWiK_BANK PROPERTY CXX_STANDARD 20)
