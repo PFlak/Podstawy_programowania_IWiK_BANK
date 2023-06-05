@@ -7,7 +7,6 @@
 #include <sqlite3.h>
 #include "crow.h"
 #include "ApiController.h"
-#include "ApiController.cpp"
 
 
 // Tutaj będzie stało API oraz wszystkie metody stawiające bazy danych itp. itd.
