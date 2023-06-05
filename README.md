@@ -1,11 +1,46 @@
-# Podstawy_programowania_IWiK_BANK
-## Build With
+# Global Money Depository -  Bank Papieski
+<a name="readme-top"></a>
+## About The Project
+Made for University Project
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+
+### Build With
 
 * [![VS][vs.dev]][vs-url]
 * [![VS][cmake.dev]][cmake-url]
 * [![VS][crow.dev]][crow-url]
 * [![VS][vcpkg.dev]][vcpkg-url]
 * [![VS][sqlite.dev]][sqlite-url]
+
+## Getting Started
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+### Prerequisites
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+* example
+  ```sh
+  example install example@latest -g
+  ```
+### Installation
+
+1. Get a  Example at [https://example.com](https://example.com)
+
+2. Clone the repo
+  ```sh
+   git clone https://github.com/PFlak/Podstawy_programowania_IWiK_BANK
+   ```
+3. Install Example packages
+   ```sh
+   example install
+   ```
+
+4. Enter your example in `config.js`
+   ```js
+   const EXAMPLE_KEY = 'ENTER YOUR EXAMPLE';
+   ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 ## Architecture
 ### API
 Our API is based on the CROW library and is deployed on the local network, accessible through port 18080.
