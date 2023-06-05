@@ -27,51 +27,7 @@ int main() {
 
     CROW_ROUTE(app, "/api///login_user").methods(crow::HTTPMethod::POST)
         ([&log](const crow::request& req) {
-
-        // Check is Content-Type is application/json
-        if (req.get_header_value("Content-Type") != "application/json") {
-            log.makeLog("api_//login_user", "", true, "415");
-            return crow::response(415);
-        }
-
-        // Parse the JSON body
-        crow::json::rvalue body;
-        try {
-            body = crow::json::load(req.body);
-        }
-        catch (const std::exception& e) {
-            log.makeLog("api_//login_user", "", true, "405");
-            return crow::response(405);
-        }
-
-        // Get values from request
-        if (!body.has("email")) {
-            log.makeLog("api_//login_user", "", true, "400");
-            return crow::response(400);
-        }
-        std::string email = body["email"].s();
-
-        if (!body.has("password")) {
-            log.makeLog("api_//login_user", "", true, "400");
-            return crow::response(400);
-        }
-        std::string password = body["password"].s();
-        /*
-         * ...
-         * ...
-         * ...
-         * In case of other parameters
-         */
-
-         // Process the request
-
-
-         // Return something
-        crow::json::wvalue responseJson;
-        responseJson["method"] = "//login_user";
-        responseJson["status"] = "success";
-
-        return crow::response(200, responseJson);
+        return ApiController::loginUser(req, &log);
             });
 
     CROW_ROUTE(app, "/api///logout_user").methods(crow::HTTPMethod::POST)
