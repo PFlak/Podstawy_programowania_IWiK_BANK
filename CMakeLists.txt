@@ -15,7 +15,6 @@ project ("Podstawy_programowania_IWiK_BANK")
 
 add_subdirectory(CreateTables)
 add_subdirectory(DatabaseConnection)
-# add_subdirectory(Operations)
 add_subdirectory(Logger)
 
 add_executable (Podstawy_programowania_IWiK_BANK 
@@ -29,13 +28,13 @@ endif()
 
 # TODO: Add tests and install targets if needed.
 
-find_package(Crow CONFIG REQUIRED)
-target_link_libraries(Podstawy_programowania_IWiK_BANK PRIVATE Crow::Crow)
-
+target_link_libraries(Podstawy_programowania_IWiK_BANK PRIVATE Logger)
 
 target_include_directories(Podstawy_programowania_IWiK_BANK PUBLIC
 "${PROJECT_SOURCE_DIR}/CreateTables"
 "${PROJECT_SOURCE_DIR}/DatabaseConnection"
-#"${PROJECT_SOURCE_DIR}/Operations"
 "${PROJECT_SOURCE_DIR}/Logger"
 )
+
+find_package(Crow CONFIG REQUIRED)
+target_link_libraries(Podstawy_programowania_IWiK_BANK PRIVATE Crow::Crow)
