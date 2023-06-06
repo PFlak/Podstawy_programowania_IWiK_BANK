@@ -1,7 +1,7 @@
 #pragma once
 #include "crow.h"
 #include "Logger.h"
-#include "domain.cpp"
+#include "Domain.h"
 
 using namespace std;
 
