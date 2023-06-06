@@ -115,7 +115,7 @@ crow::response ApiController::loginUser(const crow::request& req, Logger logger)
     std::string password = body["password"].s();
 
     // Process the request
-
+    //TO DO: get from database user by email, compare passwords, if passwords match return ok and role based on employee flag
 
     // Return something
     crow::json::wvalue responseJson;
@@ -149,11 +149,8 @@ crow::response ApiController::logoutUser(const crow::request& req, Logger logger
     }
     std::string email = body["email"].s();
 
-    // Process the request
+    logger.makeLog("api_logout_user", email, false, "");
 
-
-    // Return something
-    // Fixed for tests
     crow::json::wvalue responseJson;
     responseJson["status"] = "ok";
 
@@ -176,20 +173,54 @@ crow::response ApiController::updateUser(const crow::request& req, Logger logger
         logger.makeLog("api_update_user", "", true, "405");
         return crow::response(405);
     }
-
+    User newUser;
     if (!body.has("email")) {
-        logger.makeLog("api_update_user", "", true, "400");
+        logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-
-    std::string email = body["email"].s();
+    newUser.mail = body["email"].s();
 
     if (!body.has("password")) {
-        logger.makeLog("api_update_user", "", true, "400");
+        logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
+    newUser.password = body["password"].s();
 
-    std::string password = body["password"].s();
+    if (!body.has("login")) {
+        logger.makeLog("api_create_user", "", true, "400");
+        return crow::response(400);
+    }
+    newUser.login = body["login"].s();
+
+    if (!body.has("name")) {
+        logger.makeLog("api_create_user", "", true, "400");
+        return crow::response(400);
+    }
+    newUser.name = body["name"].s();
+
+    if (!body.has("surname")) {
+        logger.makeLog("api_create_user", "", true, "400");
+        return crow::response(400);
+    }
+    newUser.surname = body["surname"].s();
+
+    if (!body.has("personalCode")) {
+        logger.makeLog("api_create_user", "", true, "400");
+        return crow::response(400);
+    }
+    newUser.personalCode = body["personalCode"].s();
+
+    if (!body.has("phoneNumber")) {
+        logger.makeLog("api_create_user", "", true, "400");
+        return crow::response(400);
+    }
+    newUser.phoneNumber = body["phoneNumber"].s();
+
+    if (!body.has("isEmployee")) {
+        logger.makeLog("api_create_user", "", true, "400");
+        return crow::response(400);
+    }
+    // newUser.isEmployee = body["isEmployee"].s();
 
     if (body.has("role")) {
         logger.makeLog("api_update_user", "", true, "400");
@@ -198,7 +229,7 @@ crow::response ApiController::updateUser(const crow::request& req, Logger logger
     std::string role = body["role"].s();
 
     // Process the request
-
+    //TO DO: run update user database command
 
     // Return something
     // Fixed for tests
