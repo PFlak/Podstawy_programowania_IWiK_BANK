@@ -14,7 +14,7 @@ crow::response ApiController::createUser(const crow::request& req, Logger logger
         logger.makeLog("api_create_user", "", true, "415");
         return crow::response(415);
     }
-
+    User newUser;
     // Parse the JSON body
     crow::json::rvalue body;
     try {
@@ -30,23 +30,55 @@ crow::response ApiController::createUser(const crow::request& req, Logger logger
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    std::string email = body["email"].s();
+    newUser.mail = body["email"].s();
 
     if (!body.has("password")) {
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    std::string password = body["password"].s();
+    newUser.password = body["password"].s();
 
-    // Process the request
+    if (!body.has("login")) {
+        logger.makeLog("api_create_user", "", true, "400");
+        return crow::response(400);
+    }
+    newUser.login = body["login"].s();
 
+    if (!body.has("name")) {
+        logger.makeLog("api_create_user", "", true, "400");
+        return crow::response(400);
+    }
+    newUser.name = body["name"].s();
 
-    // Return something
+    if (!body.has("surname")) {
+        logger.makeLog("api_create_user", "", true, "400");
+        return crow::response(400);
+    }
+    newUser.surname = body["surname"].s();
 
-    // Fixed for tests
+    if (!body.has("personalCode")) {
+        logger.makeLog("api_create_user", "", true, "400");
+        return crow::response(400);
+    }
+    newUser.personalCode = body["personalCode"].s();
+
+    if (!body.has("phoneNumber")) {
+        logger.makeLog("api_create_user", "", true, "400");
+        return crow::response(400);
+    }
+    newUser.phoneNumber = body["phoneNumber"].s();
+
+    if (!body.has("isEmployee")) {
+        logger.makeLog("api_create_user", "", true, "400");
+        return crow::response(400);
+    }
+    // newUser.isEmployee = body["isEmployee"].s();
+     
+    
+    // TO DO: insert newUser to the database
+
     crow::json::wvalue responseJson;
     responseJson["status"] = "ok";
-    
 
     return crow::response(200, responseJson);
 }
