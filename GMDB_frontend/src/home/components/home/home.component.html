@@ -1,0 +1,21 @@
+<div class="home-container">
+  <div class="header-container">
+    <h1>Global Money Deposit</h1>
+    <div class="personal-info-container">
+      <div class="h4">{{ this.name$ }}<br /><br />{{ this.role$ }}</div>
+    </div>
+    <button #logoutBTN class="money-button" (click)="logout()">Logout</button>
+  </div>
+
+  <div class="actions-container">
+    <button #accounts class="action-button" (click)="click1()">Accounts</button>
+    <button #atm class="action-button" (click)="click2()">ATM</button>
+    <button #transfer class="action-button" (click)="click3()">Transfer</button>
+    <button #history class="action-button" (click)="click4()">History</button>
+    <button #admin class="action-button" (click)="click5()">Admin</button>
+  </div>
+
+  <div class="window">
+    <router-outlet></router-outlet>
+  </div>
+</div>

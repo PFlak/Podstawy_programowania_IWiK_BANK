@@ -1,0 +1,29 @@
+<div class="auth-container">
+  <h1 class="in-flex">Global Money Deposit</h1>
+  <h2 class="in-flex">Login</h2>
+  <div class="input-container">
+    <label for="name">Name</label>
+    <input
+      #nameINPT
+      type="text"
+      class="standard-input auth"
+      name="name"
+      required
+    />
+  </div>
+
+  <div class="input-container">
+    <label for="password">Passowrd</label>
+    <input
+      #passwordINPT
+      type="password"
+      class="standard-input auth"
+      name="password"
+    />
+  </div>
+
+  <div class="btn-container">
+    <button #loginBTN class="money-button" (click)="login()">Login</button>
+    <button #signupBTN class="money-button" (click)="signup()">Signup</button>
+  </div>
+</div>

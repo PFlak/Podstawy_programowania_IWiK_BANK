@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subscriber, subscribeOn } from 'rxjs';
 
@@ -64,15 +64,20 @@ export class ApiServiceService {
         let name = this.getValueFromMemory('U_N');
         let password = this.getValueFromMemory('U_P');
         let role = this.getValueFromMemory('U_R');
+        if (role) {
+          this.Role$.next(role);
+        } else {
+          this.setValueToMemory('U_R', 'READER');
+          this.Role$.next('READER');
+        }
         if (name) {
           this.Name$.next(name);
           this.getHistory(name).subscribe();
           this.getUserAccount(name).subscribe();
           this.getAllUsers().subscribe();
-        }
-
-        if (role) {
-          this.Role$.next(role);
+          subscriber.next(200);
+        } else {
+          subscriber.error(400);
         }
       }
     );
