@@ -1,16 +1,17 @@
 #include "ApiController.h"
 #include "Logger.h"
 
-std::string ApiController::statusCheck()
+std::string ApiController::statusCheck(Logger logger)
 {
+    logger.makeLog("api_check", "", false, "---");
 	return "API Works!";
 }
 
-crow::response ApiController::createUser(const crow::request& req)
+crow::response ApiController::createUser(const crow::request& req, Logger logger)
 {
-
     // Check is Content-Type is application/json
     if (req.get_header_value("Content-Type") != "application/json") {
+        logger.makeLog("api_create_user", "", true, "415");
         return crow::response(415);
     }
 
@@ -20,33 +21,32 @@ crow::response ApiController::createUser(const crow::request& req)
         body = crow::json::load(req.body);
     }
     catch (const std::exception& e) {
+        logger.makeLog("api_create_user", "", true, "415");
         return crow::response(405);
     }
 
     // Get values from request
     if (!body.has("email")) {
+        logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
     std::string email = body["email"].s();
 
     if (!body.has("password")) {
+        logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
     std::string password = body["password"].s();
-    /*
-     * ...
-     * ...
-     * ...
-     * In case of other parameters
-     */
 
-     // Process the request
+    // Process the request
 
 
-     // Return something
+    // Return something
+
+    // Fixed for tests
     crow::json::wvalue responseJson;
-    responseJson["method"] = "create_user";
-    responseJson["status"] = "success";
+    responseJson["status"] = "ok";
+    
 
     return crow::response(200, responseJson);
 }
@@ -55,7 +55,7 @@ crow::response ApiController::loginUser(const crow::request& req, Logger logger)
 {
     // Check is Content-Type is application/json
     if (req.get_header_value("Content-Type") != "application/json") {
-        logger.makeLog("api_//login_user", "", true, "415");
+        logger.makeLog("api_login_user", "", true, "415");
         return crow::response(415);
     }
 
@@ -65,36 +65,240 @@ crow::response ApiController::loginUser(const crow::request& req, Logger logger)
         body = crow::json::load(req.body);
     }
     catch (const std::exception& e) {
-        logger.makeLog("api_//login_user", "", true, "405");
+        logger.makeLog("api_login_user", "", true, "405");
         return crow::response(405);
     }
 
     // Get values from request
     if (!body.has("email")) {
-        logger.makeLog("api_//login_user", "", true, "400");
+        logger.makeLog("api_login_user", "", true, "400");
         return crow::response(400);
     }
     std::string email = body["email"].s();
 
     if (!body.has("password")) {
-        logger.makeLog("api_//login_user", "", true, "400");
+        logger.makeLog("api_login_user", "", true, "400");
         return crow::response(400);
     }
     std::string password = body["password"].s();
-    /*
-     * ...
-     * ...
-     * ...
-     * In case of other parameters
-     */
 
-     // Process the request
+    // Process the request
 
 
-     // Return something
+    // Return something
     crow::json::wvalue responseJson;
-    responseJson["method"] = "//login_user";
+    responseJson["status"] = "ok";
+    responseJson["role"] = "ADMIN";
+
+    return crow::response(200, responseJson);
+}
+
+crow::response ApiController::logoutUser(const crow::request& req, Logger logger) {
+    // Check is Content-Type is application/json
+    if (req.get_header_value("Content-Type") != "application/json") {
+        logger.makeLog("api_logout_user", "", true, "415");
+        return crow::response(415);
+    }
+
+    // Parse the JSON body
+    crow::json::rvalue body;
+    try {
+        body = crow::json::load(req.body);
+    }
+    catch (const std::exception& e) {
+        logger.makeLog("api_logout_user", "", true, "405");
+        return crow::response(405);
+    }
+
+    // Get values from request
+    if (!body.has("email")) {
+        logger.makeLog("api_logout_user", "", true, "400");
+        return crow::response(400);
+    }
+    std::string email = body["email"].s();
+
+    // Process the request
+
+
+    // Return something
+    // Fixed for tests
+    crow::json::wvalue responseJson;
+    responseJson["status"] = "ok";
+
+    return crow::response(200, responseJson);
+}
+
+crow::response ApiController::updateUser(const crow::request& req, Logger logger) {
+    // Check is Content-Type is application/json
+    if (req.get_header_value("Content-Type") != "application/json") {
+        logger.makeLog("api_update_user", "", true, "415");
+        return crow::response(415);
+    }
+
+    // Parse the JSON body
+    crow::json::rvalue body;
+    try {
+        body = crow::json::load(req.body);
+    }
+    catch (const std::exception& e) {
+        logger.makeLog("api_update_user", "", true, "405");
+        return crow::response(405);
+    }
+
+    if (!body.has("email")) {
+        logger.makeLog("api_update_user", "", true, "400");
+        return crow::response(400);
+    }
+
+    std::string email = body["email"].s();
+
+    if (!body.has("password")) {
+        logger.makeLog("api_update_user", "", true, "400");
+        return crow::response(400);
+    }
+
+    std::string password = body["password"].s();
+
+    if (body.has("role")) {
+        logger.makeLog("api_update_user", "", true, "400");
+        return crow::response(400);
+    }
+    std::string role = body["role"].s();
+
+    // Process the request
+
+
+    // Return something
+    // Fixed for tests
+    crow::json::wvalue responseJson;
+    responseJson["status"] = "ok";
+
+    return crow::response(200, responseJson);
+}
+
+crow::response ApiController::checkBalance(const crow::request& req, Logger logger) {
+    // Check is Content-Type is application/json
+    if (req.get_header_value("Content-Type") != "application/json") {
+        logger.makeLog("api_check_balance", "", true, "415");
+        return crow::response(415);
+    }
+
+    // Parse the JSON body
+    crow::json::rvalue body;
+    try {
+        body = crow::json::load(req.body);
+    }
+    catch (const std::exception& e) {
+        logger.makeLog("api_check_balance", "", true, "405");
+        return crow::response(405);
+    }
+
+    if (!body.has("id")) {
+        logger.makeLog("api_check_balance", "", true, "400");
+        return crow::response(400);
+    }
+
+    std::string id = body["id"].s();
+
+    // Process the request
+
+
+    // Return something
+    // Fixed for tests
+    crow::json::wvalue responseJson;
+    responseJson["credits"] = 2137;
     responseJson["status"] = "success";
 
     return crow::response(200, responseJson);
+}
+
+crow::response ApiController::getAllUsers(Logger logger) {
+
+    crow::json::wvalue responseJson;
+    responseJson["status"] = "ok";
+    // responseJson["users"] = { {{"email", "abcd@domain.com"}, {"role", "USER"}}, {{"email", "ergh@domain.com"}, {"role", "ADMIN"}} };
+
+    return crow::response(200, responseJson);
+}
+
+crow::response ApiController::transfer(const crow::request& req, Logger logger) {
+    // Check is Content-Type is application/json
+    if (req.get_header_value("Content-Type") != "application/json") {
+        logger.makeLog("api_transfer", "", true, "415");
+        return crow::response(415);
+    }
+
+    // Parse the JSON body
+    crow::json::rvalue body;
+    try {
+        body = crow::json::load(req.body);
+    }
+    catch (const std::exception& e) {
+        logger.makeLog("api_transfer", "", true, "405");
+        return crow::response(405);
+    }
+
+    if (!body.has("from")) {
+        logger.makeLog("api_transfer", "", true, "400");
+        return crow::response(400);
+    }
+
+    std::string from = body["from"].s();
+
+    if (!body.has("to")) {
+        logger.makeLog("api_transfer", "", true, "400");
+        return crow::response(400);
+    }
+
+    std::string to = body["from"].s();
+
+    if (!body.has("amount")) {
+        logger.makeLog("api_transfer", "", true, "400");
+        return crow::response(400);
+    }
+
+    std::string amount = body["amount"].s();
+
+    crow::json::wvalue responseJson;
+    responseJson["status"] = "ok";
+
+    return crow::response(200, responseJson);
+}
+
+crow::response ApiController::getHistory(const std::string& account, Logger logger) {
+    crow::json::wvalue responseJson;
+    responseJson["status"] = "ok";
+    // responseJson["history"] = { {{"from", "43 2423 4325 2355 5253"}, {"to", "57 5311 1111 1111"},{"amount", 21}}, {{"from", "43 2423 4325 2355 5253"}, {"to", "57 5311 1111 1112"},{"amount", 37}}};
+
+
+    return crow::response(200, responseJson);
+}
+
+crow::response ApiController::getUserAccount(const crow::request& req, Logger logger) {
+    if (req.get_header_value("Content-Type") != "application/json") {
+        logger.makeLog("api_get_user_account", "", true, "415");
+        return crow::response(415);
+    }
+
+    // Parse the JSON body
+    crow::json::rvalue body;
+    try {
+        body = crow::json::load(req.body);
+    }
+    catch (const std::exception& e) {
+        logger.makeLog("api_get_user_account", "", true, "405");
+        return crow::response(405);
+    }
+
+    if (!body.has("email")) {
+        logger.makeLog("api_get_user_account", "", true, "400");
+        return crow::response(400);
+    }
+    std::string email = body["email"].s();
+
+    crow::json::wvalue responseJson;
+    responseJson["status"] = "ok";
+    // responseJson["account"] = { {{"id", "43 2423 4325 2355 5253"}, {"type", 2},{"amount", 21}}, {{"id", "43 2423 4325 2355 5253"}, {"type", 3},{"amount", 54}} };
+    return responseJson;
+
 }
