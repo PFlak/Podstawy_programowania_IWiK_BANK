@@ -6,4 +6,6 @@ find_package(Crow CONFIG REQUIRED)
 target_link_libraries(ApiController PRIVATE Crow::Crow)
 target_link_libraries(ApiController PRIVATE Logger)
 
-target_include_directories(ApiController PUBLIC "${PROJECT_SOURCE_DIR}/Logger")
+target_include_directories(ApiController PUBLIC 
+"${PROJECT_SOURCE_DIR}/Logger"
+"${PROJECT_SOURCE_DIR}/Domain")
