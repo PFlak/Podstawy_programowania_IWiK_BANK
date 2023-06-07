@@ -1,0 +1,14 @@
+cmake_minimum_required (VERSION 3.8)
+
+add_library(ApiController "ApiController.cpp")
+
+find_package(Crow CONFIG REQUIRED)
+target_link_libraries(ApiController PRIVATE Crow::Crow)
+target_link_libraries(ApiController PRIVATE Logger)
+target_link_libraries(ApiController PRIVATE Operations)
+target_link_libraries(ApiController PRIVATE Domain)
+
+target_include_directories(ApiController PUBLIC 
+"${PROJECT_SOURCE_DIR}/Logger"
+"${PROJECT_SOURCE_DIR}/Domain"
+"${PROJECT_SOURCE_DIR}/Operations")

@@ -11,11 +11,16 @@ endif()
 
 project ("Podstawy_programowania_IWiK_BANK")
 
+# Set the C++ compiler flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_WIN32_WINNT=0x0B00")
+
 # Add source to this project's executable.
 
 add_subdirectory(CreateTables)
 add_subdirectory(DatabaseConnection)
-# add_subdirectory(Operations)
+add_subdirectory(ApiController)
+add_subdirectory(Domain)
+add_subdirectory(Operations)
 add_subdirectory(Logger)
 
 add_executable (Podstawy_programowania_IWiK_BANK 
@@ -32,10 +37,16 @@ endif()
 find_package(Crow CONFIG REQUIRED)
 target_link_libraries(Podstawy_programowania_IWiK_BANK PRIVATE Crow::Crow)
 
+target_link_libraries(Podstawy_programowania_IWiK_BANK PRIVATE Logger)
+target_link_libraries(Podstawy_programowania_IWiK_BANK PRIVATE ApiController)
 
 target_include_directories(Podstawy_programowania_IWiK_BANK PUBLIC
 "${PROJECT_SOURCE_DIR}/CreateTables"
 "${PROJECT_SOURCE_DIR}/DatabaseConnection"
-#"${PROJECT_SOURCE_DIR}/Operations"
-"${PROJECT_SOURCE_DIR}/Logger"
-)
+"${PROJECT_SOURCE_DIR}/ApiController"
+"${PROJECT_SOURCE_DIR}/Domain"
+"${PROJECT_SOURCE_DIR}/Operations"
+"${PROJECT_SOURCE_DIR}/Logger")
+
+find_package(Crow CONFIG REQUIRED)
+target_link_libraries(Podstawy_programowania_IWiK_BANK PRIVATE Crow::Crow)

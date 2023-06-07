@@ -3,6 +3,8 @@
 #include <sqlite3.h>
 #include <string>
 #include <vector>
+#include "Domain.h"
+#include "UserFactory.h"
 
 class Operations {
 public:
@@ -10,28 +12,40 @@ public:
 
     // --------------USERS OPERATIONS --------------
     bool createUser(
-        const std::string& login, 
-        const std::string& password, 
-        const std::string& name,
-        const std::string& surname, 
-        const std::string& personalCode, 
-        const std::string& mail,
-        const std::string& phoneNumber
+        string login,
+        string password,
+        string name,
+        string surname,
+        string personalCode,
+        string mail,
+        string phoneNumber, 
+        UserFactory *factory
     );
-    bool login(
-        const std::string& login, 
-        const std::string& password
+
+    bool updateUser(
+        string login,
+        string password,
+        string name,
+        string surname,
+        string personalCode,
+        string mail,
+        string phoneNumber,
+        UserFactory* factory
     );
-    bool editUserData(
-        int userId, 
-        const std::string& newUserId
-    );
-    bool changePassword(
-        const std::string& emailOrLogin, 
-        const std::string& newPassword
-    );
-    bool deleteUserById(int userId);
-    std::vector<std::string> displayUsers();
+
+    bool deleteUser(string login,
+        string password,
+        string name,
+        string surname,
+        string personalCode,
+        string mail,
+        string phoneNumber,
+        UserFactory* factory);
+
+    User getUserByMail(const std::string email);
+
+    vector<User> getAllUsers();
+
     bool createTransfer(
         int senderAccountId, 
         int recipientAccountId, 
@@ -51,7 +65,14 @@ public:
     );
     std::vector<std::string> displayUserTransactions(int userId);
     std::vector<std::string> displayTransactionsAndTotalTransfers(int userId);
+    std::vector<std::string> displayTransactionsAndTransfers();
 
 private:
     sqlite3* database;
+};
+
+class OperationFactory
+{
+public:
+    static Operations CreateOperations();
 };

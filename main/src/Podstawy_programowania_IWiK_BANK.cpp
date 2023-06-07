@@ -1,177 +1,66 @@
 ﻿// Podstawy_programowania_IWiK_BANK.cpp : Defines the entry point for the application.
-
 #include "Podstawy_programowania_IWiK_BANK.h"
 #include <iostream>
-#include "CreateTables.h"
-#include "DatabaseConnection.h"
-#include <sqlite3.h>
 #include "crow.h"
-
+#include "ApiController.h"
+#include "Logger.h"
 
 // Tutaj będzie stało API oraz wszystkie metody stawiające bazy danych itp. itd.
-int main(int argc, char* argv[])
-{
+int main() {
     crow::SimpleApp app;
+    Logger log;
+    log.makeLog("API_start", "api", false, "---");
 
     CROW_ROUTE(app, "/check")
-        ([]() {
-        return "API Works!";
+        ([&log]() {
+        return ApiController::statusCheck(log);
             });
 
     CROW_ROUTE(app, "/api/create_user").methods(crow::HTTPMethod::POST)
-        ([](const crow::request& req) {
-
-        // Check is Content-Type is application/json
-        if (req.get_header_value("Content-Type") != "application/json") {
-            return crow::response(415);
-        }
-
-        // Parse the JSON body
-        crow::json::rvalue body;
-        try {
-            body = crow::json::load(req.body);
-        }
-        catch (const std::exception& e) {
-            return crow::response(405);
-        }
-
-        // Get values from request
-        if (!body.has("email")) {
-            return crow::response(400);
-        }
-        std::string email = body["email"].s();
-
-        if (!body.has("password")) {
-            return crow::response(400);
-        }
-        std::string password = body["password"].s();
-        /*
-         * ...
-         * ...
-         * ...
-         * In case of other parameters
-         */
-
-         // Process the request
-
-
-         // Return something
-        crow::json::wvalue responseJson;
-        responseJson["method"] = "create_user";
-        responseJson["status"] = "success";
-
-        return crow::response(200, responseJson);
+        ([&log](const crow::request& req) {
+        return ApiController::UserController::createUser(req, log);
             });
 
     CROW_ROUTE(app, "/api/login_user").methods(crow::HTTPMethod::POST)
-        ([](const crow::request& req) {
-
-        // Check is Content-Type is application/json
-        if (req.get_header_value("Content-Type") != "application/json") {
-            return crow::response(415);
-        }
-
-        // Parse the JSON body
-        crow::json::rvalue body;
-        try {
-            body = crow::json::load(req.body);
-        }
-        catch (const std::exception& e) {
-            return crow::response(405);
-        }
-
-        // Get values from request
-        if (!body.has("email")) {
-            return crow::response(400);
-        }
-        std::string email = body["email"].s();
-
-        if (!body.has("password")) {
-            return crow::response(400);
-        }
-        std::string password = body["password"].s();
-        /*
-         * ...
-         * ...
-         * ...
-         * In case of other parameters
-         */
-
-         // Process the request
-
-
-         // Return something
-        crow::json::wvalue responseJson;
-        responseJson["method"] = "login_user";
-        responseJson["status"] = "success";
-
-        return crow::response(200, responseJson);
+        ([&log](const crow::request& req) {
+        return ApiController::UserController::loginUser(req, log);
             });
 
     CROW_ROUTE(app, "/api/logout_user").methods(crow::HTTPMethod::POST)
-        ([](const crow::request& req) {
-        // Check is Content-Type is application/json
-        if (req.get_header_value("Content-Type") != "application/json") {
-            return crow::response(415);
-        }
+        ([&log](const crow::request& req) {
+        return ApiController::UserController::logoutUser(req, log);
+            });
 
-        // Parse the JSON body
-        crow::json::rvalue body;
-        try {
-            body = crow::json::load(req.body);
-        }
-        catch (const std::exception& e) {
-            return crow::response(405);
-        }
-
-        // Get values from request
-        if (!body.has("email")) {
-            return crow::response(400);
-        }
-        std::string email = body["email"].s();
-
-        if (!body.has("password")) {
-            return crow::response(400);
-        }
-        std::string password = body["password"].s();
-        /*
-         * ...
-         * ...
-         * ...
-         * In case of other parameters
-         */
-
-         // Process the request
-
-
-         // Return something
-        crow::json::wvalue responseJson;
-        responseJson["method"] = "logout_user";
-        responseJson["status"] = "success";
-
-        return crow::response(200, responseJson);
+    CROW_ROUTE(app, "/api/update_user").methods(crow::HTTPMethod::POST)
+        ([&log](const crow::request& req) {
+        return ApiController::UserController::updateUser(req, log);
             });
 
     CROW_ROUTE(app, "/api/check_balance").methods(crow::HTTPMethod::POST)
-        ([](const crow::request& req) {
-        // Check is Content-Type is application/json
-        if (req.get_header_value("Content-Type") != "application/json") {
-            return crow::response(415);
-        }
+        ([&log](const crow::request& req) {
+        return ApiController::AccountController::checkBalance(req, log);
+            });
 
-        // Parse the JSON body
-        crow::json::rvalue body;
-        try {
-            body = crow::json::load(req.body);
-        }
-        catch (const std::exception& e) {
-            return crow::response(405);
-        }
+    CROW_ROUTE(app, "/api/admin/get_all_users").methods(crow::HTTPMethod::GET)
+        ([&log]() {
+        return ApiController::UserController::getAllUsers(log);
+            });
 
-        if (!body.has("id")) {
-            return crow::response(400);
-        }
+    CROW_ROUTE(app, "/api/transfer").methods(crow::HTTPMethod::POST)
+        ([&log](const crow::request& req) {
+        
+        return ApiController::AccountController::transfer(req, log);
+            });
 
+    CROW_ROUTE(app, "/api/get_history/<string>").methods(crow::HTTPMethod::GET)
+        ([&log](const std::string& account) {
+
+        return ApiController::AccountController::getHistory(account, log);
+            });
+
+    CROW_ROUTE(app, "/api/get_user_account").methods(crow::HTTPMethod::POST)
+        ([&log](const crow::request& req) {
+        return ApiController::AccountController::getUserAccount(req, log);
             });
 
     app.bindaddr("0.0.0.0").port(18080).multithreaded().run();
