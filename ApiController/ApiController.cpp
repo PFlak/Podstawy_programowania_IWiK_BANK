@@ -75,7 +75,7 @@ crow::response ApiController::createUser(const crow::request& req, Logger logger
     }
     // newUser.isEmployee = body["isEmployee"].s();
      
-    Operations operations; //TO DO constructor needed?
+    Operations operations = OperationFactory::CreateOperations(); //TO DO constructor needed?
     bool success = operations.createUser(newUser);
     
     crow::json::wvalue responseJson;
@@ -127,11 +127,11 @@ crow::response ApiController::loginUser(const crow::request& req, Logger logger)
 
     // Process the request
     //TO DO: get from database user by email, compare passwords, if passwords match return ok and role based on employee flag
-    Operations operations; //TO DO constructor needed?
+    Operations operations = OperationFactory::CreateOperations();
     User user = operations.getUserByMail(email);
     crow::json::wvalue responseJson;
     int status_code;
-    if (user.password == password);
+    if (user.password == password)
     {
         responseJson["status"] = "ok";
         status_code = 200;

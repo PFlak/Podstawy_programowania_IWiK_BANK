@@ -7,6 +7,8 @@
 
 class Operations {
 public:
+
+
     Operations(sqlite3* db);
 
     // --------------USERS OPERATIONS --------------
@@ -46,4 +48,10 @@ public:
 
 private:
     sqlite3* database;
+};
+
+class OperationFactory
+{
+public:
+    static Operations CreateOperations();
 };

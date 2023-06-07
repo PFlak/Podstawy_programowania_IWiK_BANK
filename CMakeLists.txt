@@ -20,7 +20,7 @@ add_subdirectory(CreateTables)
 add_subdirectory(DatabaseConnection)
 add_subdirectory(ApiController)
 add_subdirectory(Domain)
-# add_subdirectory(Operations)
+add_subdirectory(Operations)
 add_subdirectory(Logger)
 
 add_executable (Podstawy_programowania_IWiK_BANK 
@@ -45,7 +45,7 @@ target_include_directories(Podstawy_programowania_IWiK_BANK PUBLIC
 "${PROJECT_SOURCE_DIR}/DatabaseConnection"
 "${PROJECT_SOURCE_DIR}/ApiController"
 "${PROJECT_SOURCE_DIR}/Domain"
-#"${PROJECT_SOURCE_DIR}/Operations"
+"${PROJECT_SOURCE_DIR}/Operations"
 "${PROJECT_SOURCE_DIR}/Logger")
 
 find_package(Crow CONFIG REQUIRED)
