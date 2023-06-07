@@ -26,3 +26,26 @@ struct User
 	string phoneNumber;
 	bool isEmployee;
 };
+
+struct Transfer
+{
+	int id;
+	string action;
+	int senderaccountid;
+	int recipientaccountid;
+	string currency;
+	int amout;
+	string header;
+	string info;
+	string time;
+};	
+
+struct Transaction
+{
+	int id;
+	string action;
+	int accountid;
+	string currency;
+	int amount;
+	string time;
+};
