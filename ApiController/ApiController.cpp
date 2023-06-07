@@ -1,5 +1,6 @@
 #include "ApiController.h"
 #include "Logger.h"
+#include "Operations.h"
 
 std::string ApiController::statusCheck(Logger logger)
 {
@@ -74,11 +75,21 @@ crow::response ApiController::createUser(const crow::request& req, Logger logger
     }
     // newUser.isEmployee = body["isEmployee"].s();
      
+    Operations operations; //TO DO constructor needed?
+    bool success = operations.createUser(newUser);
     
-    // TO DO: insert newUser to the database
-
     crow::json::wvalue responseJson;
-    responseJson["status"] = "ok";
+    int status_code;
+    if (success)
+    {
+        responseJson["status"] = "ok";
+        status_code = 200;
+    }
+    else
+    {
+        responseJson["status"] = "error";
+        status_code = 500;
+    }
 
     return crow::response(200, responseJson);
 }
@@ -116,13 +127,31 @@ crow::response ApiController::loginUser(const crow::request& req, Logger logger)
 
     // Process the request
     //TO DO: get from database user by email, compare passwords, if passwords match return ok and role based on employee flag
-
-    // Return something
+    Operations operations; //TO DO constructor needed?
+    User user = operations.getUserByMail(email);
     crow::json::wvalue responseJson;
-    responseJson["status"] = "ok";
-    responseJson["role"] = "ADMIN";
+    int status_code;
+    if (user.password == password);
+    {
+        responseJson["status"] = "ok";
+        status_code = 200;
+        if (user.isEmployee)
+        {
+            responseJson["role"] = "ADMIN";
 
-    return crow::response(200, responseJson);
+        }
+        else
+        {
+            responseJson["role"] = "customer";
+        }
+    }
+    else
+    {
+        responseJson["status"] = "error";
+        status_code = 401;
+    }
+
+    return crow::response(status_code, responseJson);
 }
 
 crow::response ApiController::logoutUser(const crow::request& req, Logger logger) {

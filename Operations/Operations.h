@@ -3,6 +3,7 @@
 #include <sqlite3.h>
 #include <string>
 #include <vector>
+#include "Domain.h"
 
 class Operations {
 public:
@@ -10,28 +11,19 @@ public:
 
     // --------------USERS OPERATIONS --------------
     bool createUser(
-        const std::string& login, 
-        const std::string& password, 
-        const std::string& name,
-        const std::string& surname, 
-        const std::string& personalCode, 
-        const std::string& mail,
-        const std::string& phoneNumber
+        const User user
     );
-    bool login(
-        const std::string& login, 
-        const std::string& password
+
+    bool updateUser(
+        const User user
     );
-    bool editUserData(
-        int userId, 
-        const std::string& newUserId
-    );
-    bool changePassword(
-        const std::string& emailOrLogin, 
-        const std::string& newPassword
-    );
-    bool deleteUserById(int userId);
-    std::vector<std::string> displayUsers();
+
+    bool deleteUser(const User user);
+
+    User getUserByMail(const std::string email);
+
+    vector<User> getAllUsers();
+
     bool createTransfer(
         int senderAccountId, 
         int recipientAccountId, 

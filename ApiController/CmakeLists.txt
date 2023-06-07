@@ -8,4 +8,5 @@ target_link_libraries(ApiController PRIVATE Logger)
 
 target_include_directories(ApiController PUBLIC 
 "${PROJECT_SOURCE_DIR}/Logger"
-"${PROJECT_SOURCE_DIR}/Domain")
+"${PROJECT_SOURCE_DIR}/Domain"
+"${PROJECT_SOURCE_DIR}/Operations")

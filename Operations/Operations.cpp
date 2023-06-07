@@ -4,28 +4,26 @@ Operations::Operations(sqlite3* db) : database(db) {}
 
 // --------------USERS OPERATIONS --------------
 // register 
-bool Operations::createUser(const std::string& login, const std::string& password, const std::string& name,
-    const std::string& surname, const std::string& personalCode, const std::string& mail,
-    const std::string& phoneNumber) {
+bool Operations::createUser(const User user) {
     const char* query = R"(
         INSERT INTO users (login, password, name, surname, personalCode, mail, phoneNumber)
         VALUES (?, ?, ?, ?, ?, ?, ?);
     )";
 
     sqlite3_stmt* statement;
+    // Bind the parameters to the query
+    sqlite3_bind_text(statement, 1, user.login.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(statement, 2, user.password.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(statement, 3, user.name.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(statement, 4, user.surname.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(statement, 5, user.personalCode.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(statement, 6, user.mail.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(statement, 7, user.phoneNumber.c_str(), -1, SQLITE_STATIC);
+
     int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
     if (result != SQLITE_OK) {
         return false;
     }
-
-    // Bind the parameters to the query
-    sqlite3_bind_text(statement, 1, login.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(statement, 2, password.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(statement, 3, name.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(statement, 4, surname.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(statement, 5, personalCode.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(statement, 6, mail.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(statement, 7, phoneNumber.c_str(), -1, SQLITE_STATIC);
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);
@@ -33,73 +31,28 @@ bool Operations::createUser(const std::string& login, const std::string& passwor
     return result == SQLITE_DONE;
 }
 
-// login 
-bool Operations::login(const std::string& login, const std::string& password) {
-    const char* query = R"(
-        SELECT COUNT(*) FROM users WHERE login = ? AND password = ?;
-    )";
-
-    sqlite3_stmt* statement;
-    int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
-    if (result != SQLITE_OK) {
-        return false;
-    }
-
-    // Bind the parameters to the query
-    sqlite3_bind_text(statement, 1, login.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(statement, 2, password.c_str(), -1, SQLITE_STATIC);
-
-    result = sqlite3_step(statement);
-    bool loginSuccess = false;
-
-    if (result == SQLITE_ROW) {
-        int count = sqlite3_column_int(statement, 0);
-        loginSuccess = (count > 0);
-    }
-
-    sqlite3_finalize(statement);
-
-    return loginSuccess;
-}
 
 // edit user data 
-bool Operations::editUserData(int userId, const std::string& newUserId) {
+bool Operations::updateUser(const User user) {
     const char* query = R"(
-        UPDATE users SET id = ? WHERE id = ?;
-    )";
+        UPDATE users SET login = ?, password = ?, name = ?, surname = ?, personalCode = ?, mail = ?, phoneNumber = ? WHERE id = ?;
+    )";//to do: dodaæ isEmployee handling
 
     sqlite3_stmt* statement;
+    // Bind the parameters to the query
+    sqlite3_bind_int(statement, 1, user.login);
+    sqlite3_bind_int(statement, 2, user.password);
+    sqlite3_bind_int(statement, 3, user.name);
+    sqlite3_bind_int(statement, 4, user.surname);
+    sqlite3_bind_int(statement, 5, user.personalCode);
+    sqlite3_bind_int(statement, 6, user.mail);
+    sqlite3_bind_int(statement, 7, user.phoneNumber);
+    sqlite3_bind_int(statement, 8, user.id);
+
     int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
     if (result != SQLITE_OK) {
         return false;
     }
-
-    // Bind the parameters to the query
-    sqlite3_bind_int(statement, 1, userId);
-    sqlite3_bind_int(statement, 2, newUserId); 
-
-    result = sqlite3_step(statement);
-    sqlite3_finalize(statement);
-
-    return result == SQLITE_DONE;
-}
-
-// change password 
-bool Operations::changePassword(const std::string& emailOrLogin, const std::string& newPassword) {
-    const char* query = R"(
-        UPDATE users SET password = ? WHERE email = ? OR login = ?;
-    )";
-
-    sqlite3_stmt* statement;
-    int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
-    if (result != SQLITE_OK) {
-        return false;
-    }
-
-    // Bind the parameters to the query
-    sqlite3_bind_text(statement, 1, newPassword.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(statement, 2, emailOrLogin.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(statement, 3, emailOrLogin.c_str(), -1, SQLITE_STATIC);
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);
@@ -108,17 +61,18 @@ bool Operations::changePassword(const std::string& emailOrLogin, const std::stri
 }
 
 // delete 
-bool Operations::deleteUserById(int userId) {
+bool Operations::deleteUser(const User user) {
     const char* query = "DELETE FROM users WHERE id = ?;";
 
     sqlite3_stmt* statement;
+    // Bind the parameter to the query
+    sqlite3_bind_int(statement, 1, user.id);
     int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
     if (result != SQLITE_OK) {
         return false;
     }
 
-    // Bind the parameter to the query
-    sqlite3_bind_int(statement, 1, userId);
+
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);
@@ -126,9 +80,35 @@ bool Operations::deleteUserById(int userId) {
     return result == SQLITE_DONE;
 }
 
+User Operations::getUserByMail(const std::string email)
+{
+    const char* query = "SELECT * FROM users WHERE email = ?;";
+    sqlite3_stmt* statement;
+    // Bind the parameters to the query
+    sqlite3_bind_int(statement, 1, user.mail);
+    int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
+    if (result != SQLITE_OK) {
+        return users;
+    }
+
+    User user;
+    user.id = sqlite3_column_int(statement, 0);
+    user.login = sqlite3_column_text(statement, 1);
+    user.password = sqlite3_column_text(statement, 2);
+    user.name = sqlite3_column_text(statement, 3);
+    user.surname = sqlite3_column_text(statement, 4);
+    user.personalCode = sqlite3_column_text(statement, 5);
+    user.mail = sqlite3_column_text(statement, 6);
+    user.phoneNumber = sqlite3_column_text(statement, 7);
+
+    sqlite3_finalize(statement);
+
+    return user;
+}
+
 // display users 
-std::vector<std::string> Operations::displayUsers() {
-    std::vector<std::string> users;
+std::vector<User> Operations::getAllUsers() {
+    std::vector<User> users;
 
     const char* query = "SELECT * FROM users;";
 
@@ -139,25 +119,16 @@ std::vector<std::string> Operations::displayUsers() {
     }
 
     while (sqlite3_step(statement) == SQLITE_ROW) {
-        int userId = sqlite3_column_int(statement, 0);
-        const unsigned char* login = sqlite3_column_text(statement, 1);
-        const unsigned char* password = sqlite3_column_text(statement, 2);
-        const unsigned char* name = sqlite3_column_text(statement, 3);
-        const unsigned char* surname = sqlite3_column_text(statement, 4);
-        const unsigned char* personalCode = sqlite3_column_text(statement, 5);
-        const unsigned char* mail = sqlite3_column_text(statement, 6);
-        const unsigned char* phoneNumber = sqlite3_column_text(statement, 7);
-
-        std::string userInfo = "User ID: " + std::to_string(userId) +
-            ", Login: " + reinterpret_cast<const char*>(login) +
-            ", Password: " + reinterpret_cast<const char*>(password) +
-            ", Name: " + reinterpret_cast<const char*>(name) +
-            ", Surname: " + reinterpret_cast<const char*>(surname) +
-            ", Personal Code: " + reinterpret_cast<const char*>(personalCode) +
-            ", Mail: " + reinterpret_cast<const char*>(mail) +
-            ", Phone Number: " + reinterpret_cast<const char*>(phoneNumber);
-
-        users.push_back(userInfo);
+        User user;
+        user.id = sqlite3_column_int(statement, 0);
+        user.login = sqlite3_column_text(statement, 1);
+        user.password = sqlite3_column_text(statement, 2);
+        user.name = sqlite3_column_text(statement, 3);
+        user.surname = sqlite3_column_text(statement, 4);
+        user.personalCode = sqlite3_column_text(statement, 5);
+        user.mail = sqlite3_column_text(statement, 6);
+        user.phoneNumber = sqlite3_column_text(statement, 7);
+        users.push_back(user);
     }
 
     sqlite3_finalize(statement);
