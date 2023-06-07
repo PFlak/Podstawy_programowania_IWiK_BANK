@@ -45,6 +45,7 @@ public:
     );
     std::vector<std::string> displayUserTransactions(int userId);
     std::vector<std::string> displayTransactionsAndTotalTransfers(int userId);
+    std::vector<std::string> displayTransactionsAndTransfers();
 
 private:
     sqlite3* database;

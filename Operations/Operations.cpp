@@ -135,14 +135,14 @@ std::vector<User> Operations::getAllUsers() {
 
     while (sqlite3_step(statement) == SQLITE_ROW) {
         User user;
-        user.id = sqlite3_column_int(statement, 0);
-        user.login = sqlite3_column_text(statement, 1);
-        user.password = sqlite3_column_text(statement, 2);
-        user.name = sqlite3_column_text(statement, 3);
-        user.surname = sqlite3_column_text(statement, 4);
-        user.personalCode = sqlite3_column_text(statement, 5);
-        user.mail = sqlite3_column_text(statement, 6);
-        user.phoneNumber = sqlite3_column_text(statement, 7);
+        user.id = int(sqlite3_column_int(statement, 0));
+        user.login = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 1)));
+        user.password = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 2)));
+        user.name = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 3)));
+        user.surname = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 4)));
+        user.personalCode = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 5)));
+        user.mail = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 6)));
+        user.phoneNumber = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 7)));
         users.push_back(user);
     }
 
