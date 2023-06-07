@@ -18,49 +18,49 @@ int main() {
 
     CROW_ROUTE(app, "/api/create_user").methods(crow::HTTPMethod::POST)
         ([&log](const crow::request& req) {
-        return ApiController::createUser(req, log);
+        return ApiController::UserController::createUser(req, log);
             });
 
     CROW_ROUTE(app, "/api/login_user").methods(crow::HTTPMethod::POST)
         ([&log](const crow::request& req) {
-        return ApiController::loginUser(req, log);
+        return ApiController::UserController::loginUser(req, log);
             });
 
     CROW_ROUTE(app, "/api/logout_user").methods(crow::HTTPMethod::POST)
         ([&log](const crow::request& req) {
-        return ApiController::logoutUser(req, log);
+        return ApiController::UserController::logoutUser(req, log);
             });
 
     CROW_ROUTE(app, "/api/update_user").methods(crow::HTTPMethod::POST)
         ([&log](const crow::request& req) {
-        return ApiController::updateUser(req, log);
+        return ApiController::UserController::updateUser(req, log);
             });
 
     CROW_ROUTE(app, "/api/check_balance").methods(crow::HTTPMethod::POST)
         ([&log](const crow::request& req) {
-        return ApiController::checkBalance(req, log);
+        return ApiController::AccountController::checkBalance(req, log);
             });
 
     CROW_ROUTE(app, "/api/admin/get_all_users").methods(crow::HTTPMethod::GET)
         ([&log]() {
-        return ApiController::getAllUsers(log);
+        return ApiController::UserController::getAllUsers(log);
             });
 
     CROW_ROUTE(app, "/api/transfer").methods(crow::HTTPMethod::POST)
         ([&log](const crow::request& req) {
         
-        return ApiController::transfer(req, log);
+        return ApiController::AccountController::transfer(req, log);
             });
 
     CROW_ROUTE(app, "/api/get_history/<string>").methods(crow::HTTPMethod::GET)
         ([&log](const std::string& account) {
 
-        return ApiController::getHistory(account, log);
+        return ApiController::AccountController::getHistory(account, log);
             });
 
     CROW_ROUTE(app, "/api/get_user_account").methods(crow::HTTPMethod::POST)
         ([&log](const crow::request& req) {
-        return ApiController::getUserAccount(req, log);
+        return ApiController::AccountController::getUserAccount(req, log);
             });
 
     app.bindaddr("0.0.0.0").port(18080).multithreaded().run();

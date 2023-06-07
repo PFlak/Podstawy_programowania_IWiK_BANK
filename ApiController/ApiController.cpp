@@ -10,7 +10,7 @@ std::string ApiController::statusCheck(Logger logger)
 	return "API Works!";
 }
 
-crow::response ApiController::createUser(const crow::request& req, Logger logger)
+crow::response ApiController::UserController::createUser(const crow::request& req, Logger logger)
 {
     // Check is Content-Type is application/json
     if (req.get_header_value("Content-Type") != "application/json") {
@@ -112,7 +112,7 @@ crow::response ApiController::createUser(const crow::request& req, Logger logger
     return crow::response(200, responseJson);
 }
 
-crow::response ApiController::loginUser(const crow::request& req, Logger logger) 
+crow::response ApiController::UserController::loginUser(const crow::request& req, Logger logger)
 {
     // Check is Content-Type is application/json
     if (req.get_header_value("Content-Type") != "application/json") {
@@ -172,7 +172,7 @@ crow::response ApiController::loginUser(const crow::request& req, Logger logger)
     return crow::response(status_code, responseJson);
 }
 
-crow::response ApiController::logoutUser(const crow::request& req, Logger logger) {
+crow::response ApiController::UserController::logoutUser(const crow::request& req, Logger logger) {
     // Check is Content-Type is application/json
     if (req.get_header_value("Content-Type") != "application/json") {
         logger.makeLog("api_logout_user", "", true, "415");
@@ -204,7 +204,7 @@ crow::response ApiController::logoutUser(const crow::request& req, Logger logger
     return crow::response(200, responseJson);
 }
 
-crow::response ApiController::updateUser(const crow::request& req, Logger logger) {
+crow::response ApiController::UserController::updateUser(const crow::request& req, Logger logger) {
     // Check is Content-Type is application/json
     if (req.get_header_value("Content-Type") != "application/json") {
         logger.makeLog("api_update_user", "", true, "415");
@@ -286,7 +286,7 @@ crow::response ApiController::updateUser(const crow::request& req, Logger logger
     return crow::response(200, responseJson);
 }
 
-crow::response ApiController::checkBalance(const crow::request& req, Logger logger) {
+crow::response ApiController::AccountController::checkBalance(const crow::request& req, Logger logger) {
     // Check is Content-Type is application/json
     if (req.get_header_value("Content-Type") != "application/json") {
         logger.makeLog("api_check_balance", "", true, "415");
@@ -322,7 +322,7 @@ crow::response ApiController::checkBalance(const crow::request& req, Logger logg
     return crow::response(200, responseJson);
 }
 
-crow::response ApiController::getAllUsers(Logger logger) {
+crow::response ApiController::UserController::getAllUsers(Logger logger) {
 
     crow::json::wvalue responseJson;
     responseJson["status"] = "ok";
@@ -331,7 +331,7 @@ crow::response ApiController::getAllUsers(Logger logger) {
     return crow::response(200, responseJson);
 }
 
-crow::response ApiController::transfer(const crow::request& req, Logger logger) {
+crow::response ApiController::AccountController::transfer(const crow::request& req, Logger logger) {
     // Check is Content-Type is application/json
     if (req.get_header_value("Content-Type") != "application/json") {
         logger.makeLog("api_transfer", "", true, "415");
@@ -375,7 +375,7 @@ crow::response ApiController::transfer(const crow::request& req, Logger logger) 
     return crow::response(200, responseJson);
 }
 
-crow::response ApiController::getHistory(const std::string& account, Logger logger) {
+crow::response ApiController::AccountController::getHistory(const std::string& account, Logger logger) {
     crow::json::wvalue responseJson;
     responseJson["status"] = "ok";
     // responseJson["history"] = { {{"from", "43 2423 4325 2355 5253"}, {"to", "57 5311 1111 1111"},{"amount", 21}}, {{"from", "43 2423 4325 2355 5253"}, {"to", "57 5311 1111 1112"},{"amount", 37}}};
@@ -384,7 +384,7 @@ crow::response ApiController::getHistory(const std::string& account, Logger logg
     return crow::response(200, responseJson);
 }
 
-crow::response ApiController::getUserAccount(const crow::request& req, Logger logger) {
+crow::response ApiController::AccountController::getUserAccount(const crow::request& req, Logger logger) {
     if (req.get_header_value("Content-Type") != "application/json") {
         logger.makeLog("api_get_user_account", "", true, "415");
         return crow::response(415);
