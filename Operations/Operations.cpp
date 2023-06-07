@@ -13,11 +13,19 @@ Operations::Operations(sqlite3* db) : database(db) {}
 
 // --------------USERS OPERATIONS --------------
 // register 
-bool Operations::createUser(const User user) {
+bool Operations::createUser(string login,
+    string password,
+    string name,
+    string surname,
+    string personalCode,
+    string mail,
+    string phoneNumber,
+    UserFactory* factory) {
+    User user = factory->CreateUser(login, password, name, surname, personalCode, mail, phoneNumber);
     const char* query = R"(
         INSERT INTO users (login, password, name, surname, personalCode, mail, phoneNumber)
         VALUES (?, ?, ?, ?, ?, ?, ?);
-    )";
+    )";// TO DO admin handling
 
     sqlite3_stmt* statement;
     
@@ -44,7 +52,15 @@ bool Operations::createUser(const User user) {
 
 
 // edit user data 
-bool Operations::updateUser(const User user) {
+bool Operations::updateUser(string login,
+    string password,
+    string name,
+    string surname,
+    string personalCode,
+    string mail,
+    string phoneNumber,
+    UserFactory* factory) {
+    User user = factory->CreateUser(login, password, name, surname, personalCode, mail, phoneNumber);
     const char* query = R"(
         UPDATE users SET login = ?, password = ?, name = ?, surname = ?, personalCode = ?, mail = ?, phoneNumber = ? WHERE id = ?;
     )";//to do: dodaæ isEmployee handling
@@ -74,7 +90,16 @@ bool Operations::updateUser(const User user) {
 }
 
 // delete 
-bool Operations::deleteUser(const User user) {
+bool Operations::deleteUser(string login,
+    string password,
+    string name,
+    string surname,
+    string personalCode,
+    string mail,
+    string phoneNumber,
+    UserFactory* factory) {
+    User user = factory->CreateUser(login, password, name, surname, personalCode, mail, phoneNumber);
+
     const char* query = "DELETE FROM users WHERE id = ?;";
 
     sqlite3_stmt* statement;

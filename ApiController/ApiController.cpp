@@ -1,6 +1,8 @@
 #include "ApiController.h"
 #include "Logger.h"
 #include "Operations.h"
+#include "UserFactory.h"
+#include "AdminFactory.h"
 
 std::string ApiController::statusCheck(Logger logger)
 {
@@ -15,7 +17,6 @@ crow::response ApiController::createUser(const crow::request& req, Logger logger
         logger.makeLog("api_create_user", "", true, "415");
         return crow::response(415);
     }
-    User newUser;
     // Parse the JSON body
     crow::json::rvalue body;
     try {
@@ -31,52 +32,69 @@ crow::response ApiController::createUser(const crow::request& req, Logger logger
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    newUser.mail = body["email"].s();
+    std::string mail = body["email"].s();
 
     if (!body.has("password")) {
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    newUser.password = body["password"].s();
+    std::string password = body["password"].s();
 
     if (!body.has("login")) {
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    newUser.login = body["login"].s();
+    std::string login = body["login"].s();
 
     if (!body.has("name")) {
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    newUser.name = body["name"].s();
+    std::string name = body["name"].s();
 
     if (!body.has("surname")) {
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    newUser.surname = body["surname"].s();
+    std::string surname = body["surname"].s();
 
     if (!body.has("personalCode")) {
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    newUser.personalCode = body["personalCode"].s();
+    std::string personalCode = body["personalCode"].s();
 
     if (!body.has("phoneNumber")) {
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    newUser.phoneNumber = body["phoneNumber"].s();
+    std::string phoneNumber = body["phoneNumber"].s();
 
     if (!body.has("isEmployee")) {
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    // newUser.isEmployee = body["isEmployee"].s();
+    std::string isEmployee = body["isEmployee"].s();
+
+    UserFactory* factory;
+    if (isEmployee == "true")
+    {
+        factory = new AdminFactory();
+    }
+    else
+    {
+        factory = new UserFactory();
+    }
      
     Operations operations = OperationFactory::CreateOperations(); //TO DO constructor needed?
-    bool success = operations.createUser(newUser);
+    bool success = operations.createUser(login,
+        password,
+        name,
+        surname,
+        personalCode,
+        mail,
+        phoneNumber, 
+        factory);
     
     crow::json::wvalue responseJson;
     int status_code;

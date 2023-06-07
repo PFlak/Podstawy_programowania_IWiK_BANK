@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "Domain.h"
+#include "UserFactory.h"
 
 class Operations {
 public:
@@ -11,14 +12,35 @@ public:
 
     // --------------USERS OPERATIONS --------------
     bool createUser(
-        const User user
+        string login,
+        string password,
+        string name,
+        string surname,
+        string personalCode,
+        string mail,
+        string phoneNumber, 
+        UserFactory *factory
     );
 
     bool updateUser(
-        const User user
+        string login,
+        string password,
+        string name,
+        string surname,
+        string personalCode,
+        string mail,
+        string phoneNumber,
+        UserFactory* factory
     );
 
-    bool deleteUser(const User user);
+    bool deleteUser(string login,
+        string password,
+        string name,
+        string surname,
+        string personalCode,
+        string mail,
+        string phoneNumber,
+        UserFactory* factory);
 
     User getUserByMail(const std::string email);
 
