@@ -1,0 +1,32 @@
+.account-circle:nth-child(1) {
+  width: 19rem;
+  height: 19rem;
+  border-radius: 19rem;
+
+  font-size: 2rem;
+
+  top: 3rem;
+  left: 2rem;
+}
+
+.account-circle:nth-child(2) {
+  width: 15rem;
+  height: 15rem;
+  border-radius: 15rem;
+
+  font-size: 1.4rem;
+
+  top: -17rem;
+  left: 32rem;
+}
+
+.account-circle:nth-child(3) {
+  width: 10rem;
+  height: 10rem;
+  border-radius: 10rem;
+
+  font-size: 1rem;
+
+  top: -17rem;
+  left: 24rem;
+}

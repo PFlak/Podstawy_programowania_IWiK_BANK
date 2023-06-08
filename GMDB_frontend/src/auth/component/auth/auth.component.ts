@@ -20,8 +20,35 @@ export class AuthComponent {
   @ViewChild('signupBTN')
   private signupBTN!: ElementRef;
 
-  public isSignClicked: boolean = false;
-  public isLoginClicked: boolean = false;
+  @ViewChild('loginACT')
+  private loginACT!: ElementRef;
+
+  @ViewChild('signACT')
+  private signACT!: ElementRef;
+
+  click1() {
+    this.loginACT.nativeElement.classList.add('clicked');
+    this.signACT.nativeElement.classList.remove('active');
+
+    setTimeout(() => {
+      this.loginACT.nativeElement.classList.add('active');
+      this.loginACT.nativeElement.classList.remove('clicked');
+      this.isLogin = true;
+    });
+  }
+
+  click2() {
+    this.signACT.nativeElement.classList.add('clicked');
+    this.loginACT.nativeElement.classList.remove('active');
+
+    setTimeout(() => {
+      this.signACT.nativeElement.classList.add('active');
+      this.signACT.nativeElement.classList.remove('clicked');
+      this.isLogin = false;
+    }, 300);
+  }
+
+  public isLogin: boolean = true;
 
   formData = {
     name: '',

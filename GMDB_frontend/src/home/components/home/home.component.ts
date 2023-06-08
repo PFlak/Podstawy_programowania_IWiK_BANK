@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ApiServiceService } from 'src/apiService/api-service.service';
 
 @Component({
@@ -28,7 +29,7 @@ export class HomeComponent implements OnInit {
   public name$: string = '';
   public role$: string = '';
 
-  constructor(private api: ApiServiceService) {}
+  constructor(private api: ApiServiceService, private router: Router) {}
 
   ngOnInit(): void {
     this.api.Name$.subscribe((response) => {
@@ -37,7 +38,7 @@ export class HomeComponent implements OnInit {
 
     this.api.Role$.subscribe((response) => {
       console.log(response);
-      this.role$ = response;
+      this.role$ = 'ADMIN';
       this.adminCheck(response);
     });
   }
