@@ -23,10 +23,9 @@ bool Operations::createUser(string login,
     UserFactory* factory) {
     User user = factory->CreateUser(login, password, name, surname, personalCode, mail, phoneNumber);
     const char* query = R"(
-        INSERT INTO users (login, password, name, surname, personalCode, mail, phoneNumber)
-        VALUES (?, ?, ?, ?, ?, ?, ?);
+        INSERT INTO users (login, password, name, surname, personalCode, mail, phoneNumber, isEmployee)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?);
     )";// TO DO admin handling
-
     sqlite3_stmt* statement;
     
 
@@ -43,6 +42,7 @@ bool Operations::createUser(string login,
     sqlite3_bind_text(statement, 5, user.personalCode.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(statement, 6, user.mail.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(statement, 7, user.phoneNumber.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int(statement, 8, user.isEmployee);
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);
@@ -62,7 +62,7 @@ bool Operations::updateUser(string login,
     UserFactory* factory) {
     User user = factory->CreateUser(login, password, name, surname, personalCode, mail, phoneNumber);
     const char* query = R"(
-        UPDATE users SET login = ?, password = ?, name = ?, surname = ?, personalCode = ?, mail = ?, phoneNumber = ? WHERE id = ?;
+        UPDATE users SET login = ?, password = ?, name = ?, surname = ?, personalCode = ?, mail = ?, phoneNumber = ?, isEmployee = ?  WHERE id = ?;
     )";//to do: dodaæ isEmployee handling
 
     sqlite3_stmt* statement;
@@ -81,7 +81,8 @@ bool Operations::updateUser(string login,
     sqlite3_bind_text(statement, 5, user.personalCode.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(statement, 6, user.mail.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(statement, 7, user.phoneNumber.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_int(statement, 8, user.id);
+    sqlite3_bind_int(statement, 8, user.isEmployee);
+    sqlite3_bind_int(statement, 9, user.id);
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);
@@ -140,6 +141,7 @@ User Operations::getUserByMail(const std::string email)
     user.personalCode = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 5)));
     user.mail = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 6)));
     user.phoneNumber = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 7)));
+    user.isEmployee = bool(sqlite3_column_int(statement, 8));
 
     sqlite3_finalize(statement);
 
@@ -168,6 +170,7 @@ std::vector<User> Operations::getAllUsers() {
         user.personalCode = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 5)));
         user.mail = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 6)));
         user.phoneNumber = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 7)));
+        user.isEmployee = int(sqlite3_column_int(statement, 8));
         users.push_back(user);
     }
 
@@ -178,7 +181,7 @@ std::vector<User> Operations::getAllUsers() {
 
 // --------------ACCOUNTS OPERATIONS --------------
 // create account 
-bool Operations::createAccount(int userId, const std::string& currency, int balance, const std::string& type, double interestRate) {
+bool Operations::createAccount(Account account) {
     const char* query = "INSERT INTO accounts (user_id, currency, balance, type, interest_rate) VALUES (?, ?, ?, ?, ?);";
 
     sqlite3_stmt* statement;
@@ -188,11 +191,11 @@ bool Operations::createAccount(int userId, const std::string& currency, int bala
     }
 
     // Bind the parameters to the query
-    sqlite3_bind_int(statement, 1, userId);
-    sqlite3_bind_text(statement, 2, currency.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_int(statement, 3, balance);
-    sqlite3_bind_text(statement, 4, type.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_double(statement, 5, interestRate);
+    sqlite3_bind_int(statement, 1, account.userId);
+    sqlite3_bind_text(statement, 2, account.currency.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int(statement, 3, account.balance);
+    sqlite3_bind_text(statement, 4, account.type.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_double(statement, 5, account.interestRate);
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);
@@ -201,11 +204,10 @@ bool Operations::createAccount(int userId, const std::string& currency, int bala
 }
 
 // transfer 
-bool Operations::createTransfer(int senderAccountId, int recipientAccountId, const std::string& currency,
-    double amount, const std::string& header, const std::string& info) {
+bool Operations::createTransfer(Transfer transfer) {
     const char* query = R"(
-        INSERT INTO transfers (action, sender_account_id, recipient_account_id, currency, amount, header, info, time)
-        VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'));
+        INSERT INTO transfers (sender_account_id, recipient_account_id, currency, amount, header, info, time)
+        VALUES (?, ?, ?, ?, ?, ?, datetime('now'));
     )";
 
     sqlite3_stmt* statement;
@@ -215,13 +217,12 @@ bool Operations::createTransfer(int senderAccountId, int recipientAccountId, con
     }
 
     // Bind the parameters to the query
-    sqlite3_bind_text(statement, 1, "Transfer", -1, SQLITE_STATIC);
-    sqlite3_bind_int(statement, 2, senderAccountId);
-    sqlite3_bind_int(statement, 3, recipientAccountId);
-    sqlite3_bind_text(statement, 4, currency.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_double(statement, 5, amount);
-    sqlite3_bind_text(statement, 6, header.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(statement, 7, info.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int(statement, 1, transfer.senderAccountId);
+    sqlite3_bind_int(statement, 2, transfer.recipientAccountId);
+    sqlite3_bind_text(statement, 3, transfer.currency.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_double(statement, 4, transfer.amount);
+    sqlite3_bind_text(statement, 5, transfer.header.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(statement, 6, transfer.info.c_str(), -1, SQLITE_STATIC);
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);
@@ -251,17 +252,15 @@ std::vector<std::string> Operations::displayUserTransfers(int userId) {
 
     while (sqlite3_step(statement) == SQLITE_ROW) {
         int transferId = sqlite3_column_int(statement, 0);
-        const unsigned char* action = sqlite3_column_text(statement, 1);
-        int senderAccountId = sqlite3_column_int(statement, 2);
-        int recipientAccountId = sqlite3_column_int(statement, 3);
-        const unsigned char* currency = sqlite3_column_text(statement, 4);
-        double amount = sqlite3_column_double(statement, 5);
-        const unsigned char* header = sqlite3_column_text(statement, 6);
-        const unsigned char* info = sqlite3_column_text(statement, 7);
-        const unsigned char* time = sqlite3_column_text(statement, 8);
+        int senderAccountId = sqlite3_column_int(statement, 1);
+        int recipientAccountId = sqlite3_column_int(statement, 2);
+        const unsigned char* currency = sqlite3_column_text(statement, 3);
+        double amount = sqlite3_column_double(statement, 4);
+        const unsigned char* header = sqlite3_column_text(statement, 5);
+        const unsigned char* info = sqlite3_column_text(statement, 6);
+        const unsigned char* time = sqlite3_column_text(statement, 7);
 
         std::string transferInfo = "Transfer ID: " + std::to_string(transferId) +
-            ", Action: " + reinterpret_cast<const char*>(action) +
             ", Sender Account ID: " + std::to_string(senderAccountId) +
             ", Recipient Account ID: " + std::to_string(recipientAccountId) +
             ", Currency: " + reinterpret_cast<const char*>(currency) +

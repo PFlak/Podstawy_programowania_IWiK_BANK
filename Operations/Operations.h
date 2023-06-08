@@ -46,17 +46,10 @@ public:
 
     vector<User> getAllUsers();
 
-    bool createTransfer(
-        int senderAccountId, 
-        int recipientAccountId, 
-        const std::string& currency,
-        double amount, 
-        const std::string& header, 
-        const std::string& info
-    );
+    bool createTransfer(Transfer transfer);
 
     // --------------ACCOUNTS OPERATIONS --------------
-    bool createAccount(int userId, const std::string& currency, int balance, const std::string& type, double interestRate);
+    bool createAccount(Account account);
     std::vector<std::string> displayUserTransfers(int userId);
     bool createTransaction(
         int accountId, 
