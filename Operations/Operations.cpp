@@ -1,14 +1,13 @@
 #include "Operations.h"
-#include "DataBaseConnection.h"
+
 
 Operations OperationFactory::CreateOperations()
 {
     DatabaseConnection connection = DatabaseConnection();
-    sqlite3* db = connection.getDatabase();
-    return Operations(db);
+    return Operations(connection);
 }
 
-Operations::Operations(sqlite3* db) : database(db) {}
+Operations::Operations(DatabaseConnection db) : database(db) {}
 
 
 // --------------USERS OPERATIONS --------------
@@ -28,8 +27,8 @@ bool Operations::createUser(string login,
     )";// TO DO admin handling
     sqlite3_stmt* statement;
     
-
-    int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
+    database.openDatabase();
+    int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
     if (result != SQLITE_OK) {
         return false;
     }
@@ -46,6 +45,7 @@ bool Operations::createUser(string login,
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);
+    database.closeDatabase();
 
     return result == SQLITE_DONE;
 }
@@ -67,8 +67,8 @@ bool Operations::updateUser(string login,
 
     sqlite3_stmt* statement;
     
-
-    int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
+    database.openDatabase();
+    int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
     if (result != SQLITE_OK) {
         return false;
     }
@@ -86,6 +86,7 @@ bool Operations::updateUser(string login,
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);
+    database.closeDatabase();
 
     return result == SQLITE_DONE;
 }
@@ -104,8 +105,8 @@ bool Operations::deleteUser(string login,
     const char* query = "DELETE FROM users WHERE id = ?;";
 
     sqlite3_stmt* statement;
-    
-    int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
+    database.openDatabase();
+    int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
     if (result != SQLITE_OK) {
         return false;
     }
@@ -115,6 +116,7 @@ bool Operations::deleteUser(string login,
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);
+    database.closeDatabase();
 
     return result == SQLITE_DONE;
 }
@@ -123,8 +125,8 @@ User Operations::getUserByMail(const std::string email)
 {
     const char* query = "SELECT * FROM users WHERE email = ?;";
     sqlite3_stmt* statement;
-    
-    int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
+    database.openDatabase();
+    int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
     if (result != SQLITE_OK) {
         return User();
     }
@@ -144,6 +146,7 @@ User Operations::getUserByMail(const std::string email)
     user.isEmployee = bool(sqlite3_column_int(statement, 8));
 
     sqlite3_finalize(statement);
+    database.closeDatabase();
 
     return user;
 }
@@ -155,7 +158,8 @@ std::vector<User> Operations::getAllUsers() {
     const char* query = "SELECT * FROM users;";
 
     sqlite3_stmt* statement;
-    int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
+    database.openDatabase();
+    int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
     if (result != SQLITE_OK) {
         return users;
     }
@@ -175,6 +179,7 @@ std::vector<User> Operations::getAllUsers() {
     }
 
     sqlite3_finalize(statement);
+    database.closeDatabase();
 
     return users;
 }
@@ -185,7 +190,8 @@ bool Operations::createAccount(Account account) {
     const char* query = "INSERT INTO accounts (user_id, currency, balance, type, interest_rate) VALUES (?, ?, ?, ?, ?);";
 
     sqlite3_stmt* statement;
-    int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
+    database.openDatabase();
+    int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
     if (result != SQLITE_OK) {
         return false;
     }
@@ -199,6 +205,7 @@ bool Operations::createAccount(Account account) {
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);
+    database.closeDatabase();
 
     return result == SQLITE_DONE;
 }
@@ -211,7 +218,8 @@ bool Operations::createTransfer(Transfer transfer) {
     )";
 
     sqlite3_stmt* statement;
-    int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
+    database.openDatabase();
+    int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
     if (result != SQLITE_OK) {
         return false;
     }
@@ -226,6 +234,7 @@ bool Operations::createTransfer(Transfer transfer) {
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);
+    database.closeDatabase();
 
     return result == SQLITE_DONE;
 }
@@ -241,7 +250,8 @@ std::vector<std::string> Operations::displayUserTransfers(int userId) {
     )";
 
     sqlite3_stmt* statement;
-    int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
+    database.openDatabase();
+    int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
     if (result != SQLITE_OK) {
         return transfers;
     }
@@ -273,6 +283,7 @@ std::vector<std::string> Operations::displayUserTransfers(int userId) {
     }
 
     sqlite3_finalize(statement);
+    database.closeDatabase();
 
     return transfers;
 }
@@ -285,7 +296,8 @@ bool Operations::createTransaction(int accountId, const std::string& currency, d
     )";
 
     sqlite3_stmt* statement;
-    int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
+    database.openDatabase();
+    int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
     if (result != SQLITE_OK) {
         return false;
     }
@@ -298,6 +310,7 @@ bool Operations::createTransaction(int accountId, const std::string& currency, d
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);
+    database.closeDatabase();
 
     return result == SQLITE_DONE;
 }
@@ -311,7 +324,8 @@ std::vector<std::string> Operations::displayUserTransactions(int userId) {
     )";
 
     sqlite3_stmt* statement;
-    int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
+    database.openDatabase();
+    int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
     if (result != SQLITE_OK) {
         return transactions;
     }
@@ -338,6 +352,7 @@ std::vector<std::string> Operations::displayUserTransactions(int userId) {
     }
 
     sqlite3_finalize(statement);
+    database.closeDatabase();
 
     return transactions;
 }
@@ -353,7 +368,8 @@ std::vector<std::string> Operations::displayTransactionsAndTransfers() {
     )";
 
     sqlite3_stmt* statement;
-    int result = sqlite3_prepare_v2(database, query, -1, &statement, nullptr);
+    database.openDatabase();
+    int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
     if (result != SQLITE_OK) {
         return transactionsAndTransfers;
     }
@@ -377,6 +393,7 @@ std::vector<std::string> Operations::displayTransactionsAndTransfers() {
     }
 
     sqlite3_finalize(statement);
+    database.closeDatabase();
 
     return transactionsAndTransfers;
 }

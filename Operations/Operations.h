@@ -5,10 +5,11 @@
 #include <vector>
 #include "Domain.h"
 #include "UserFactory.h"
+#include "DataBaseConnection.h"
 
 class Operations {
 public:
-    Operations(sqlite3* db);
+    Operations(DatabaseConnection db);
 
     // --------------USERS OPERATIONS --------------
     bool createUser(
@@ -61,7 +62,7 @@ public:
     std::vector<std::string> displayTransactionsAndTransfers();
 
 private:
-    sqlite3* database;
+    DatabaseConnection database;
 };
 
 class OperationFactory
