@@ -24,6 +24,17 @@
     />
   </div>
 
+  <div *ngIf="!isLogin" class="input-container">
+    <label for="email">Email</label>
+    <input
+      #emailINPT
+      type="text"
+      class="standard-input auth"
+      name="email"
+      required
+    />
+  </div>
+
   <div class="input-container">
     <label for="password">Passowrd</label>
     <input
