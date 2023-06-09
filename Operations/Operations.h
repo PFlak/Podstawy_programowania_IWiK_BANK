@@ -5,10 +5,11 @@
 #include <vector>
 #include "Domain.h"
 #include "UserFactory.h"
+#include "DataBaseConnection.h"
 
 class Operations {
 public:
-    Operations(sqlite3* db);
+    Operations(DatabaseConnection db);
 
     // --------------USERS OPERATIONS --------------
     bool createUser(
@@ -46,17 +47,10 @@ public:
 
     vector<User> getAllUsers();
 
-    bool createTransfer(
-        int senderAccountId, 
-        int recipientAccountId, 
-        const std::string& currency,
-        double amount, 
-        const std::string& header, 
-        const std::string& info
-    );
+    bool createTransfer(Transfer transfer);
 
     // --------------ACCOUNTS OPERATIONS --------------
-    bool createAccount(int userId, const std::string& currency, int balance, const std::string& type, double interestRate);
+    bool createAccount(Account account);
     std::vector<std::string> displayUserTransfers(int userId);
     bool createTransaction(
         int accountId, 
@@ -68,7 +62,7 @@ public:
     std::vector<std::string> displayTransactionsAndTransfers();
 
 private:
-    sqlite3* database;
+    DatabaseConnection database;
 };
 
 class OperationFactory

@@ -16,6 +16,7 @@ bool CreateTables::createUserTable() {
             personalCode TEXT NOT NULL,
             mail TEXT NOT NULL,
             phoneNumber TEXT NOT NULL
+            isEmployee INTEGER NOT NULL
         );
     )";
 
@@ -54,7 +55,6 @@ bool CreateTables::createTransferTable() {
 	const char* query = R"(
         CREATE TABLE IF NOT EXISTS transfers (
             id INTEGER PRIMARY KEY,
-            action TEXT NOT NULL,
             sender_account_id INTEGER NOT NULL,
             recipient_account_id INTEGER NOT NULL,
             currency TEXT NOT NULL,
@@ -64,28 +64,6 @@ bool CreateTables::createTransferTable() {
             time TEXT NOT NULL,
             FOREIGN KEY (sender_account_id) REFERENCES accounts (account_number),
             FOREIGN KEY (recipient_account_id) REFERENCES accounts (account_number)
-        );
-    )";
-
-	char* errorMessage = nullptr;
-	int result = sqlite3_exec(database, query, nullptr, nullptr, &errorMessage);
-	if (result != SQLITE_OK) {
-		return false;
-	}
-
-	return true;
-}
-
-bool CreateTables::createTransactionTable() {
-	const char* query = R"(
-        CREATE TABLE IF NOT EXISTS transactions (
-            id INTEGER PRIMARY KEY,
-            action TEXT NOT NULL,
-            account_id INTEGER NOT NULL,
-            currency TEXT NOT NULL,
-            amount REAL NOT NULL,
-            time TEXT NOT NULL,
-            FOREIGN KEY (account_id) REFERENCES accounts (account_number)
         );
     )";
 

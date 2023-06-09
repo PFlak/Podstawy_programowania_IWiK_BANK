@@ -109,7 +109,7 @@ crow::response ApiController::UserController::createUser(const crow::request& re
         status_code = 500;
     }
 
-    return crow::response(200, responseJson);
+    return crow::response(status_code, responseJson);
 }
 
 crow::response ApiController::UserController::loginUser(const crow::request& req, Logger logger)

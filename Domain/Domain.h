@@ -30,11 +30,10 @@ struct User
 struct Transfer
 {
 	int id;
-	string action;
-	int senderaccountid;
-	int recipientaccountid;
+	int senderAccountId;
+	int recipientAccountId;
 	string currency;
-	int amout;
+	int amount;
 	string header;
 	string info;
 	string time;
