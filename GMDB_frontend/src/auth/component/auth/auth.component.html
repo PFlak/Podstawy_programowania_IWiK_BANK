@@ -1,0 +1,56 @@
+<div class="auth-container">
+  <h1 class="in-flex">Global Money Deposit</h1>
+  <div class="actions-container">
+    <button
+      type="button"
+      #loginACT
+      (click)="click1()"
+      class="action-button active"
+    >
+      Login
+    </button>
+    <button type="button" #signACT (click)="click2()" class="action-button">
+      Sing up
+    </button>
+  </div>
+  <div class="input-container">
+    <label for="name">Name</label>
+    <input
+      #nameINPT
+      type="text"
+      class="standard-input auth"
+      name="name"
+      required
+    />
+  </div>
+
+  <div *ngIf="!isLogin" class="input-container">
+    <label for="email">Email</label>
+    <input
+      #emailINPT
+      type="text"
+      class="standard-input auth"
+      name="email"
+      required
+    />
+  </div>
+
+  <div class="input-container">
+    <label for="password">Passowrd</label>
+    <input
+      #passwordINPT
+      type="password"
+      class="standard-input auth"
+      name="password"
+    />
+  </div>
+
+  <div class="btn-container">
+    <button *ngIf="isLogin" #loginBTN class="money-button" (click)="login()">
+      Login
+    </button>
+    <button *ngIf="!isLogin" #signupBTN class="money-button" (click)="signup()">
+      Signup
+    </button>
+  </div>
+</div>

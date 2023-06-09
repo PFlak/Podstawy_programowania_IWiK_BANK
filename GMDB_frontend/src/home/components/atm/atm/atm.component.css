@@ -1,0 +1,67 @@
+.atm-flex {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.3rem;
+
+  padding: 2rem 2rem;
+}
+
+.account-container {
+  display: flex;
+  flex-direction: row;
+  column-gap: 0.4rem;
+  align-items: center;
+}
+
+.account-box {
+  padding: 1rem 1rem;
+  border-radius: 0.2rem;
+  background-color: whitesmoke;
+  width: 80%;
+  height: 2rem;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+
+  animation-name: accountBox;
+  animation-duration: 4s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes accountBox {
+  0% {
+    box-shadow: 0px 0px 1px gray;
+    transform: translate(0, 0);
+  }
+
+  100% {
+    box-shadow: -6px -6px 1px gray;
+    transform: translate(-6px, -6px);
+  }
+}
+
+.account-header {
+  font-size: 0.8rem;
+}
+
+.account-number {
+  display: flex;
+  flex-direction: row;
+  column-gap: 1rem;
+  justify-content: space-between;
+  color: rgb(80, 80, 80);
+  font-size: 0.5rem;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: row;
+  column-gap: 1rem;
+}
