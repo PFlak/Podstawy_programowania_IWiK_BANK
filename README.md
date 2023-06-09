@@ -1,8 +1,21 @@
 # Global Money Depository -  Bank Papieski
 <a name="readme-top"></a>
 ## About The Project
-Made for University Project
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Made for University Project.
+Expected features were:
+* Class Polymorphic 
+* Class Inheritance
+* Abstract Class
+* Inner Class
+* It supposed to be based on C++
+* App is supposed to show work in dedicated GUI or console
+* It needs to save some kind of data to file
+
+As a group we decide to go above and beyond to make it as great as possible with our limited work group.
+and made features like:
+* Dedicated Gui
+* Admin account to manage users
+* Option to own multiple wallets in one account (in project its set up as max 3 for sake of presentation)
 
 
 ### Build With
@@ -16,31 +29,34 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Getting Started
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+With this quick tutorial we help we can guide you with instalation and startup
 
 ### Prerequisites
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-* example
-  ```sh
-  example install example@latest -g
-  ```
+To even start instalation process you need to have nodeJS
+
+[![VS][node.dev]][node-url]
 ### Installation
 
-1. Get a  Example at [https://example.com](https://example.com)
 
-2. Clone the repo
-  ```sh
+1. Clone the repo
+ 
+ ```sh
    git clone https://github.com/PFlak/Podstawy_programowania_IWiK_BANK
    ```
-3. Install Example packages
-   ```sh
-   example install
+
+2. Install Angular packages
+ 
+  ```sh
+  npm install -g @angular/cli@15.0.4
    ```
 
-4. Enter your example in `config.js`
+3. Start Server
+
    ```js
-   const EXAMPLE_KEY = 'ENTER YOUR EXAMPLE';
+    ng serve
    ```
+4. Go to http://localhost:18080 to access your bank app
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -102,3 +118,6 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 [crow-url]:https://crowcpp.org/
 [sqlite.dev]:https://img.shields.io/badge/sqlite-v3-yellow?style=for-the-badge
 [sqlite-url]:https://www.sqlite.org/index.html
+
+[node.dev]:https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white
+[node-url]:https://nodejs.org/en
