@@ -123,7 +123,7 @@ bool Operations::deleteUser(string login,
 
 User Operations::getUserByMail(const std::string email)
 {
-    const char* query = "SELECT * FROM users WHERE email = ?;";
+    const char* query = "SELECT * FROM users WHERE mail = ?;";
     sqlite3_stmt* statement;
     database.openDatabase();
     int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
@@ -240,13 +240,13 @@ bool Operations::createTransfer(Transfer transfer) {
 }
 
 // display transfers 
-std::vector<std::string> Operations::displayUserTransfers(int userId) {
-    std::vector<std::string> transfers;
+std::vector<Transfer> Operations::displayUserTransfers(int accountNumber) {
+    std::vector<Transfer> transfers;
 
     const char* query = R"(
         SELECT * FROM transfers
-        WHERE sender_account_id IN (SELECT account_number FROM accounts WHERE user_id = ?)
-        OR recipient_account_id IN (SELECT account_number FROM accounts WHERE user_id = ?);
+        WHERE sender_account_id IN (SELECT account_number FROM accounts WHERE account_number = ?)
+        OR recipient_account_id IN (SELECT account_number FROM accounts WHERE account_number = ?);
     )";
 
     sqlite3_stmt* statement;
@@ -256,144 +256,21 @@ std::vector<std::string> Operations::displayUserTransfers(int userId) {
         return transfers;
     }
 
-    // Bind the parameters to the query
-    sqlite3_bind_int(statement, 1, userId);
-    sqlite3_bind_int(statement, 2, userId);
-
     while (sqlite3_step(statement) == SQLITE_ROW) {
-        int transferId = sqlite3_column_int(statement, 0);
-        int senderAccountId = sqlite3_column_int(statement, 1);
-        int recipientAccountId = sqlite3_column_int(statement, 2);
-        const unsigned char* currency = sqlite3_column_text(statement, 3);
-        double amount = sqlite3_column_double(statement, 4);
-        const unsigned char* header = sqlite3_column_text(statement, 5);
-        const unsigned char* info = sqlite3_column_text(statement, 6);
-        const unsigned char* time = sqlite3_column_text(statement, 7);
-
-        std::string transferInfo = "Transfer ID: " + std::to_string(transferId) +
-            ", Sender Account ID: " + std::to_string(senderAccountId) +
-            ", Recipient Account ID: " + std::to_string(recipientAccountId) +
-            ", Currency: " + reinterpret_cast<const char*>(currency) +
-            ", Amount: " + std::to_string(amount) +
-            ", Header: " + reinterpret_cast<const char*>(header) +
-            ", Info: " + reinterpret_cast<const char*>(info) +
-            ", Time: " + reinterpret_cast<const char*>(time);
-
-        transfers.push_back(transferInfo);
+        Transfer transfer;
+        transfer.id = int(sqlite3_column_int(statement, 0));
+        transfer.senderAccountId = int(sqlite3_column_int(statement, 1));
+        transfer.recipientAccountId = int(sqlite3_column_int(statement, 2));
+        transfer.currency = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 3)));
+        transfer.amount = sqlite3_column_double(statement, 4);
+        transfer.header = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 5)));
+        transfer.info = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 6)));
+        transfer.time = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 7)));
+        transfers.push_back(transfer);
     }
 
     sqlite3_finalize(statement);
     database.closeDatabase();
 
     return transfers;
-}
-
-// transaction 
-bool Operations::createTransaction(int accountId, const std::string& currency, double amount) {
-    const char* query = R"(
-        INSERT INTO transactions (action, account_id, currency, amount, time)
-        VALUES (?, ?, ?, ?, datetime('now'));
-    )";
-
-    sqlite3_stmt* statement;
-    database.openDatabase();
-    int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
-    if (result != SQLITE_OK) {
-        return false;
-    }
-
-    // Bind the parameters to the query
-    sqlite3_bind_text(statement, 1, "Transaction", -1, SQLITE_STATIC);
-    sqlite3_bind_int(statement, 2, accountId);
-    sqlite3_bind_text(statement, 3, currency.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_double(statement, 4, amount);
-
-    result = sqlite3_step(statement);
-    sqlite3_finalize(statement);
-    database.closeDatabase();
-
-    return result == SQLITE_DONE;
-}
-
-// display transactions 
-std::vector<std::string> Operations::displayUserTransactions(int userId) {
-    std::vector<std::string> transactions;
-
-    const char* query = R"(
-        SELECT * FROM transactions WHERE account_id IN (SELECT account_number FROM accounts WHERE user_id = ?);
-    )";
-
-    sqlite3_stmt* statement;
-    database.openDatabase();
-    int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
-    if (result != SQLITE_OK) {
-        return transactions;
-    }
-
-    // Bind the parameters to the query
-    sqlite3_bind_int(statement, 1, userId);
-
-    while (sqlite3_step(statement) == SQLITE_ROW) {
-        int transactionId = sqlite3_column_int(statement, 0);
-        const unsigned char* action = sqlite3_column_text(statement, 1);
-        int accountId = sqlite3_column_int(statement, 2);
-        const unsigned char* currency = sqlite3_column_text(statement, 3);
-        double amount = sqlite3_column_double(statement, 4);
-        const unsigned char* time = sqlite3_column_text(statement, 5);
-
-        std::string transactionInfo = "Transaction ID: " + std::to_string(transactionId) +
-            ", Action: " + reinterpret_cast<const char*>(action) +
-            ", Account ID: " + std::to_string(accountId) +
-            ", Currency: " + reinterpret_cast<const char*>(currency) +
-            ", Amount: " + std::to_string(amount) +
-            ", Time: " + reinterpret_cast<const char*>(time);
-
-        transactions.push_back(transactionInfo);
-    }
-
-    sqlite3_finalize(statement);
-    database.closeDatabase();
-
-    return transactions;
-}
-
-// display transactions and transfers 
-std::vector<std::string> Operations::displayTransactionsAndTransfers() {
-    std::vector<std::string> transactionsAndTransfers;
-
-    const char* query = R"(
-        SELECT * FROM transactions
-        UNION ALL
-        SELECT * FROM transfers;
-    )";
-
-    sqlite3_stmt* statement;
-    database.openDatabase();
-    int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
-    if (result != SQLITE_OK) {
-        return transactionsAndTransfers;
-    }
-
-    while (sqlite3_step(statement) == SQLITE_ROW) {
-        int id = sqlite3_column_int(statement, 0);
-        const unsigned char* action = sqlite3_column_text(statement, 1);
-        int accountId = sqlite3_column_int(statement, 2);
-        const unsigned char* currency = sqlite3_column_text(statement, 3);
-        double amount = sqlite3_column_double(statement, 4);
-        const unsigned char* time = sqlite3_column_text(statement, 5);
-
-        std::string info = "ID: " + std::to_string(id) +
-            ", Action: " + reinterpret_cast<const char*>(action) +
-            ", Account ID: " + std::to_string(accountId) +
-            ", Currency: " + reinterpret_cast<const char*>(currency) +
-            ", Amount: " + std::to_string(amount) +
-            ", Time: " + reinterpret_cast<const char*>(time);
-
-        transactionsAndTransfers.push_back(info);
-    }
-
-    sqlite3_finalize(statement);
-    database.closeDatabase();
-
-    return transactionsAndTransfers;
 }
