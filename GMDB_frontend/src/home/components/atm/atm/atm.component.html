@@ -1,0 +1,52 @@
+<div class="atm-flex">
+  <div class="account-container">
+    <div class="account-box">
+      <div class="account-header">Main Account</div>
+      <div class="account-number">
+        <a>{{ this.mainAccount }}</a
+        ><a>{{ this.mainValue }}$</a>
+      </div>
+    </div>
+    <button #mainBTN (click)="click1()" class="action-button active">
+      Select
+    </button>
+  </div>
+  <div class="account-container">
+    <div class="account-box">
+      <div class="account-header">Savings Account</div>
+      <div class="account-number">
+        <a>{{ this.savingsAccount }}</a
+        ><a>{{ this.savingsValue }}$</a>
+      </div>
+    </div>
+    <button #savingsBTN (click)="click2()" class="action-button">Select</button>
+  </div>
+  <div class="account-container">
+    <div class="account-box">
+      <div class="account-header">Investment Account</div>
+      <div class="account-number">
+        <a>{{ this.investmentAccount }}</a
+        ><a>{{ this.investmentValue }}$</a>
+      </div>
+    </div>
+    <button #investmentBTN (click)="click3()" class="action-button">
+      Select
+    </button>
+  </div>
+  <div class="input-container">
+    <label for="amount">amount</label>
+    <input
+      #amountINPT
+      type="number"
+      class="standard-input"
+      name="amount"
+      required
+    />
+    <div class="button-container">
+      <button #payinBTN class="money-button" (click)="payin()">Pay In</button>
+      <button #payoutBTN class="money-button" (click)="payout()">
+        Pay Out
+      </button>
+    </div>
+  </div>
+</div>

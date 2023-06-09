@@ -1,0 +1,9 @@
+<div class="history-container">
+  <div class="history-box" *ngFor="let item of this.history">
+    <div>From: {{ item.from }}</div>
+    <div class="to-flex">
+      <div>To: {{ item.to }}</div>
+      <div>Amount: {{ item.amount }}</div>
+    </div>
+  </div>
+</div>

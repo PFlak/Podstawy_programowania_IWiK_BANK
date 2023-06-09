@@ -1,0 +1,53 @@
+.home-container {
+  width: 60rem;
+  height: 40rem;
+  background-color: whitesmoke;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+  box-shadow: 8px 8px 2px grey;
+
+  align-items: center;
+  padding: 1rem;
+}
+
+.header-container {
+  display: flex;
+  flex-direction: row;
+  width: 85%;
+
+  justify-content: space-between;
+}
+
+.personal-info-container {
+  width: 12rem;
+  height: 5rem;
+
+  background-color: rgb(255, 248, 232);
+
+  box-shadow: -4px -4px 3px gray;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.actions-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  column-gap: 1rem;
+  width: 80%;
+}
+
+.window {
+  width: 81%;
+  height: 25rem;
+  background-color: whitesmoke;
+  box-shadow: -4px -4px 2px gray;
+}
