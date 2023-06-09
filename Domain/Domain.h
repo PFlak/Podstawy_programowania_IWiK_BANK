@@ -38,13 +38,3 @@ struct Transfer
 	string info;
 	string time;
 };	
-
-struct Transaction
-{
-	int id;
-	string action;
-	int accountid;
-	string currency;
-	int amount;
-	string time;
-};

@@ -47,19 +47,12 @@ public:
 
     vector<User> getAllUsers();
 
-    bool createTransfer(Transfer transfer);
 
     // --------------ACCOUNTS OPERATIONS --------------
     bool createAccount(Account account);
-    std::vector<std::string> displayUserTransfers(int userId);
-    bool createTransaction(
-        int accountId, 
-        const std::string& currency, 
-        double amount
-    );
-    std::vector<std::string> displayUserTransactions(int userId);
-    std::vector<std::string> displayTransactionsAndTotalTransfers(int userId);
-    std::vector<std::string> displayTransactionsAndTransfers();
+    bool createTransfer(Transfer transfer);
+
+    vector<Transfer> displayUserTransfers(int account_number);
 
 private:
     DatabaseConnection database;
