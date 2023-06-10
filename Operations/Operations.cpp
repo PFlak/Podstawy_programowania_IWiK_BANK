@@ -23,13 +23,17 @@ bool Operations::createUser(
     User user = factory->CreateUser(password, name, surname, personalCode, mail, phoneNumber);
     const char* query = R"(
         INSERT INTO users (password, name, surname, personalCode, mail, phoneNumber, isEmployee)
-        VALUES (?, ?, ?, ?, ?, ?, ?);
+        VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7);
     )";// TO DO admin handling
     sqlite3_stmt* statement;
     
     database.openDatabase();
     int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
     if (result != SQLITE_OK) {
+        const char* errorMessage = sqlite3_errmsg(database.getDatabase());
+        printf("Error executing SQL statement: %s\n", errorMessage);
+        sqlite3_finalize(statement);
+        database.closeDatabase();
         return false;
     }
 
@@ -121,7 +125,7 @@ bool Operations::deleteUser(
 
 User Operations::getUserByMail(const std::string email)
 {
-    const char* query = "SELECT * FROM users WHERE mail = ?;";
+    const char* query = "SELECT * FROM users WHERE mail = ?1;";
     sqlite3_stmt* statement;
     database.openDatabase();
     int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
@@ -133,15 +137,20 @@ User Operations::getUserByMail(const std::string email)
     sqlite3_bind_text(statement, 1, email.c_str(), -1, SQLITE_STATIC);
 
     User user;
-    user.id = int(sqlite3_column_int(statement, 0));
-    user.password = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 21)));
-    user.name = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 2)));
-    user.surname = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 3)));
-    user.personalCode = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 4)));
-    user.mail = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 5)));
-    user.phoneNumber = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 6)));
-    user.isEmployee = bool(sqlite3_column_int(statement, 7));
-
+    int rowResult = sqlite3_step(statement);
+    if (rowResult == SQLITE_ROW)
+    {
+        user.id = int(sqlite3_column_int(statement, 0));
+        const unsigned char* password = sqlite3_column_text(statement, 1);
+        user.password = string(reinterpret_cast<const char*>(password));
+        user.name = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 2)));
+        user.surname = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 3)));
+        user.personalCode = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 4)));
+        user.mail = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 5)));
+        user.phoneNumber = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 6)));
+        user.isEmployee = bool(sqlite3_column_int(statement, 7));
+    }
+    
     sqlite3_finalize(statement);
     database.closeDatabase();
 
@@ -203,6 +212,37 @@ bool Operations::createAccount(Account account) {
     database.closeDatabase();
 
     return result == SQLITE_DONE;
+}
+
+vector<Account> Operations::GetUserAccounts(int id)
+{
+    std::vector<Account> accounts;
+
+    const char* query = "SELECT * FROM accounts WHERE user_id = ?1;";
+
+    sqlite3_stmt* statement;
+    database.openDatabase();
+    int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
+    if (result != SQLITE_OK) {
+        return accounts;
+    }
+    sqlite3_bind_int(statement, 1, id);
+
+    while (sqlite3_step(statement) == SQLITE_ROW) {
+        Account account;
+        account.accountNumber = int(sqlite3_column_int(statement, 0));
+        account.userId = int(sqlite3_column_int(statement, 1));
+
+        account.currency = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 2)));
+        account.balance = int(sqlite3_column_int(statement, 3));
+        account.type = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 4)));
+        account.interestRate = int(sqlite3_column_int(statement, 5));
+    }
+
+    sqlite3_finalize(statement);
+    database.closeDatabase();
+
+    return accounts;
 }
 
 // transfer 

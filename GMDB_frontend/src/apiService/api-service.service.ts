@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subscriber, subscribeOn } from 'rxjs';
 
@@ -12,7 +12,7 @@ import { getLocaleDateFormat } from '@angular/common';
   providedIn: 'root',
 })
 export class ApiServiceService {
-  private SERVER_DOMAIN = 'localhost:18080';
+  private SERVER_DOMAIN = '127.0.0.1:18080';
 
   //ONLY FOR ADMIN
   public UserList$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);

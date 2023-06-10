@@ -23,16 +23,16 @@ int main() {
     // Enable CORS
     crow::App<crow::CORSHandler> app;
 
-    // Customize CORS
+    //// Customize CORS
     auto& cors = app.get_middleware<crow::CORSHandler>();
 
-    // clang-format off
+    //// clang-format off
     cors
         .global()
-        .headers("X-Custom-Header", "Upgrade-Insecure-Requests")
+        .headers("X-Custom-Header", "Upgrade-Insecure-Requests", "content-type", "*")
         .methods("POST"_method, "GET"_method)
         .prefix("/cors")
-        .origin("http://localhost:4200")
+        .origin("*")
         .prefix("/nocors")
         .ignore();
 

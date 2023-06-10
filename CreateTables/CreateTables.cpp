@@ -14,12 +14,13 @@ bool CreateTables::createUserTable() {
             surname TEXT NOT NULL,
             personalCode TEXT NOT NULL,
             mail TEXT NOT NULL,
-            phoneNumber TEXT NOT NULL
+            phoneNumber TEXT NOT NULL,
             isEmployee INTEGER NOT NULL
         );
     )";
     database.openDatabase();
 	char* errorMessage = nullptr;
+    sqlite3_stmt* statement;
 	int result = sqlite3_exec(database.getDatabase(), query, nullptr, nullptr, &errorMessage);
 	if (result != SQLITE_OK) {
 		return false;

@@ -16,6 +16,6 @@ User CustomerFactory::CreateUser(
 	user.personalCode = personalCode;
 	user.mail = mail;
 	user.phoneNumber = phoneNumber;
-	user.isEmployee = true;
+	user.isEmployee = false;
 	return user;
 }

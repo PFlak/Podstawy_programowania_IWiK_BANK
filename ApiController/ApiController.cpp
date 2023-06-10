@@ -4,6 +4,9 @@
 #include "UserFactory.h"
 #include "AdminFactory.h"
 #include "CustomerFactory.h"
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 std::string ApiController::statusCheck(Logger logger)
 {
@@ -236,64 +239,84 @@ crow::response ApiController::UserController::updateUser(const crow::request& re
         logger.makeLog("api_update_user", "", true, "405");
         return crow::response(405);
     }
-    User newUser;
     if (!body.has("email")) {
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    newUser.mail = body["email"].s();
+    std::string mail = body["email"].s();
 
     if (!body.has("password")) {
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    newUser.password = body["password"].s();
+    std::string password = body["password"].s();
 
     if (!body.has("name")) {
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    newUser.name = body["name"].s();
+    std::string name = body["name"].s();
 
     if (!body.has("surname")) {
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    newUser.surname = body["surname"].s();
+    std::string surname = body["surname"].s();
 
     if (!body.has("personalCode")) {
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    newUser.personalCode = body["personalCode"].s();
+    std::string personalCode = body["personalCode"].s();
 
     if (!body.has("phoneNumber")) {
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    newUser.phoneNumber = body["phoneNumber"].s();
+    std::string phoneNumber = body["phoneNumber"].s();
 
     if (!body.has("isEmployee")) {
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
     }
-    // newUser.isEmployee = body["isEmployee"].s();
+    std::string isEmployee = body["isEmployee"].s();
 
-    if (body.has("role")) {
-        logger.makeLog("api_update_user", "", true, "400");
-        return crow::response(400);
+    UserFactory* factory;
+    if (isEmployee == "true")
+    {
+        factory = new AdminFactory();
     }
-    std::string role = body["role"].s();
+    else
+    {
+        factory = new CustomerFactory();
+    }
 
-    // Process the request
-    //TO DO: run update user database command
+    Operations operations = OperationFactory::CreateOperations();
+    bool success = operations.updateUser(
+        password,
+        name,
+        surname,
+        personalCode,
+        mail,
+        phoneNumber,
+        factory);
 
     // Return something
     // Fixed for tests
     crow::json::wvalue responseJson;
-    responseJson["status"] = "ok";
+    int status_code;
+    if (success)
+    {
+        responseJson["status"] = "ok";
+        status_code = 200;
+    }
+    else
+    {
+        responseJson["status"] = "error";
+        status_code = 400;
+    }
 
-    return crow::response(200, responseJson);
+    return crow::response(status_code, responseJson);
 }
 
 crow::response ApiController::AccountController::checkBalance(const crow::request& req, Logger logger) {
@@ -335,11 +358,25 @@ crow::response ApiController::AccountController::checkBalance(const crow::reques
 crow::response ApiController::UserController::getAllUsers(Logger logger) {
     Operations operations = OperationFactory::CreateOperations();
     vector<User> users = operations.getAllUsers();
-    //to do serialize the list to json somehow, somewhen....
+    json serializedVector;
+    for (const auto& user : users)
+    {
+        json item;
+        item["id"] = user.id;
+        item["password"] = user.password;
+        item["name"] = user.name;
+        item["surname"] = user.surname;
+        item["personalCode"] = user.personalCode;
+        item["mail"] = user.mail;
+        item["phoneNumber"] = user.phoneNumber;
+        item["isEmployee"] = user.isEmployee;
+        serializedVector.push_back(item);
+    }
+
+    std::string jsonString = serializedVector.dump();
     crow::json::wvalue responseJson;
     responseJson["status"] = "ok";
-    // responseJson["users"] = { {{"email", "abcd@domain.com"}, {"role", "USER"}}, {{"email", "ergh@domain.com"}, {"role", "ADMIN"}} };
-
+    responseJson["users"] = jsonString;
     return crow::response(200, responseJson);
 }
 
@@ -418,9 +455,27 @@ crow::response ApiController::AccountController::getUserAccount(const crow::requ
     }
     std::string email = body["email"].s();
 
+    Operations operations = OperationFactory::CreateOperations();
+    User user = operations.getUserByMail(email);
+
+    vector<Account> accounts = operations.GetUserAccounts(user.id);
+    json serializedVector;
+    for (const auto& account : accounts)
+    {
+        json item;
+        item["account_number"] = account.accountNumber;
+        item["userId"] = account.userId;
+        item["currency"] = account.currency;
+        item["balance"] = account.balance;
+        item["type"] = account.type;
+        item["interestRate"] = account.interestRate;
+        serializedVector.push_back(item);
+    }
+
+    std::string jsonString = serializedVector.dump();
     crow::json::wvalue responseJson;
     responseJson["status"] = "ok";
-    // responseJson["account"] = { {{"id", "43 2423 4325 2355 5253"}, {"type", 2},{"amount", 21}}, {{"id", "43 2423 4325 2355 5253"}, {"type", 3},{"amount", 54}} };
+    responseJson["account"] = jsonString;
     return responseJson;
 
 }

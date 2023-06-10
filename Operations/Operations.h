@@ -49,6 +49,7 @@ public:
     // --------------ACCOUNTS OPERATIONS --------------
     bool createAccount(Account account);
     bool createTransfer(Transfer transfer);
+    vector<Account> GetUserAccounts(int id);
 
     vector<Transfer> displayUserTransfers(int account_number);
 

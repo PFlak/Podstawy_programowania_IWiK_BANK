@@ -8,6 +8,13 @@ target_link_libraries(ApiController PRIVATE Logger)
 target_link_libraries(ApiController PRIVATE Operations)
 target_link_libraries(ApiController PRIVATE Domain)
 
+include(FetchContent)
+
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
+target_link_libraries(ApiController PRIVATE nlohmann_json::nlohmann_json)
+
 target_include_directories(ApiController PUBLIC 
 "${PROJECT_SOURCE_DIR}/Logger"
 "${PROJECT_SOURCE_DIR}/Domain"
