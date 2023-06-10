@@ -2,14 +2,39 @@
 #include "Podstawy_programowania_IWiK_BANK.h"
 #include <iostream>
 #include "crow.h"
+#include "crow/middlewares/cors.h"
 #include "ApiController.h"
 #include "Logger.h"
+#include "CreateTables.h"
+#include "DatabaseConnection.h"
 
 // Tutaj będzie stało API oraz wszystkie metody stawiające bazy danych itp. itd.
 int main() {
-    crow::SimpleApp app;
+    DatabaseConnection connection = DatabaseConnection();
+    CreateTables creationEngine = CreateTables(connection);
+
+    creationEngine.createUserTable();
+    creationEngine.createAccountTable();
+    creationEngine.createTransferTable();
+    //crow::SimpleApp app;
     Logger log;
     log.makeLog("API_start", "api", false, "---");
+
+    // Enable CORS
+    crow::App<crow::CORSHandler> app;
+
+    // Customize CORS
+    auto& cors = app.get_middleware<crow::CORSHandler>();
+
+    // clang-format off
+    cors
+        .global()
+        .headers("X-Custom-Header", "Upgrade-Insecure-Requests")
+        .methods("POST"_method, "GET"_method)
+        .prefix("/cors")
+        .origin("http://localhost:4200")
+        .prefix("/nocors")
+        .ignore();
 
     CROW_ROUTE(app, "/check")
         ([&log]() {

@@ -3,6 +3,7 @@
 #include "Operations.h"
 #include "UserFactory.h"
 #include "AdminFactory.h"
+#include "CustomerFactory.h"
 
 std::string ApiController::statusCheck(Logger logger)
 {
@@ -77,7 +78,7 @@ crow::response ApiController::UserController::createUser(const crow::request& re
     }
     else
     {
-        factory = new UserFactory();
+        factory = new CustomerFactory();
     }
      
     Operations operations = OperationFactory::CreateOperations();
@@ -98,9 +99,9 @@ crow::response ApiController::UserController::createUser(const crow::request& re
         Account account1;
         Account account2;
         Account account3;
-        account1.userId = user.Id;
-        account2.userId = user.Id;
-        account3.userId = user.Id;
+        account1.userId = user.id;
+        account2.userId = user.id;
+        account3.userId = user.id;
         account1.currency = "PLN";
         account2.currency = "PLN";
         account3.currency = "EUR";

@@ -12,7 +12,7 @@ import { getLocaleDateFormat } from '@angular/common';
   providedIn: 'root',
 })
 export class ApiServiceService {
-  private SERVER_DOMAIN = '192.168.1.30:18080';
+  private SERVER_DOMAIN = 'localhost:18080';
 
   //ONLY FOR ADMIN
   public UserList$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);

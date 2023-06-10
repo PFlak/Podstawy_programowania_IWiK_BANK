@@ -1,15 +1,16 @@
 #pragma once
 #include "Domain.h"
+#include "UserFactory.h"
 
-class UserFactory
+class CustomerFactory : public UserFactory
 {
 public:
-	virtual User CreateUser(
+	User CreateUser(
 		string password,
 		string name,
 		string surname,
 		string personalCode,
 		string mail,
 		string phoneNumber
-	) = 0;
+	);
 };

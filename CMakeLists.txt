@@ -39,6 +39,8 @@ target_link_libraries(Podstawy_programowania_IWiK_BANK PRIVATE Crow::Crow)
 
 target_link_libraries(Podstawy_programowania_IWiK_BANK PRIVATE Logger)
 target_link_libraries(Podstawy_programowania_IWiK_BANK PRIVATE ApiController)
+target_link_libraries(Podstawy_programowania_IWiK_BANK PRIVATE CreateTables)
+
 
 target_include_directories(Podstawy_programowania_IWiK_BANK PUBLIC
 "${PROJECT_SOURCE_DIR}/CreateTables"

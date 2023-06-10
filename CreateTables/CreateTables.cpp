@@ -1,7 +1,7 @@
 #include "CreateTables.h"
 
-CreateTables::CreateTables(sqlite3* db) {
-	database = db;
+CreateTables::CreateTables(DatabaseConnection database) {
+	database = database;
 }
 
 
@@ -18,13 +18,22 @@ bool CreateTables::createUserTable() {
             isEmployee INTEGER NOT NULL
         );
     )";
-
+    database.openDatabase();
 	char* errorMessage = nullptr;
-	int result = sqlite3_exec(database, query, nullptr, nullptr, &errorMessage);
+	int result = sqlite3_exec(database.getDatabase(), query, nullptr, nullptr, &errorMessage);
 	if (result != SQLITE_OK) {
 		return false;
 	}
+    const char* query2 = R"(
+INSERT INTO users 
+VALUES ('admin', 'admin', 'administrator', '00000000000', 'admin@admin.com', '+00 000 000 000', 1);
+)";
+    int result2 = sqlite3_exec(database.getDatabase(), query, nullptr, nullptr, &errorMessage);
+    if (result != SQLITE_OK) {
+        return false;
+    }
 
+    database.closeDatabase();
 	return true;
 }
 
@@ -40,12 +49,14 @@ bool CreateTables::createAccountTable() {
             FOREIGN KEY (user_id) REFERENCES users (id)
         );
     )";
-
+    database.openDatabase();
 	char* errorMessage = nullptr;
-	int result = sqlite3_exec(database, query, nullptr, nullptr, &errorMessage);
+	int result = sqlite3_exec(database.getDatabase(), query, nullptr, nullptr, &errorMessage);
 	if (result != SQLITE_OK) {
 		return false;
 	}
+
+    database.closeDatabase();
 
 	return true;
 }
@@ -65,12 +76,15 @@ bool CreateTables::createTransferTable() {
             FOREIGN KEY (recipient_account_id) REFERENCES accounts (account_number)
         );
     )";
+    database.openDatabase();
 
 	char* errorMessage = nullptr;
-	int result = sqlite3_exec(database, query, nullptr, nullptr, &errorMessage);
+	int result = sqlite3_exec(database.getDatabase(), query, nullptr, nullptr, &errorMessage);
 	if (result != SQLITE_OK) {
 		return false;
 	}
+    database.closeDatabase();
+
 
 	return true;
 }

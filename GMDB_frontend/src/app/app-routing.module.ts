@@ -11,7 +11,7 @@ import { TransferComponent } from 'src/home/components/transfer/transfer/transfe
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
+    component: AuthComponent,
     data: { title: 'GMDBP' },
   },
   {
