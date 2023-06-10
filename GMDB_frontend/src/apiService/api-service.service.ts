@@ -65,7 +65,7 @@ export class ApiServiceService {
     History[]
   >([]);
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   setValueToMemory(key: string, value: string) {
     let encrypted_value = btoa(value);
@@ -111,20 +111,25 @@ export class ApiServiceService {
   }
 
   apiCheck(): Observable<number> {
+    let headerDict = new HttpHeaders();
+    headerDict = headerDict.set('Access-Control-Allow-Origin', '*');
     let observable: Observable<number> = new Observable<number>(
       (subscriber) => {
-        this.http.get(`http://${this.SERVER_DOMAIN}/check`).subscribe(
-          (response: any) => {
-            if (response == 'API Works!') {
-              subscriber.next(200);
-            } else {
-              subscriber.error(400);
+        this.http.get(`http://${this.SERVER_DOMAIN}/check`, {
+          headers: headerDict
+        })
+          .subscribe(
+            (response: any) => {
+              if (response == 'API Works!') {
+                subscriber.next(200);
+              } else {
+                subscriber.error(400);
+              }
+            },
+            (error: number) => {
+              subscriber.next(error);
             }
-          },
-          (error: number) => {
-            subscriber.next(error);
-          }
-        );
+          );
       }
     );
 
@@ -141,6 +146,8 @@ export class ApiServiceService {
     phoneNumber: string,
     isEmployee: string = 'false'
   ): Observable<number> {
+    let headerDict = new HttpHeaders();
+    headerDict = headerDict.set('Access-Control-Allow-Origin', '*');
     let observable: Observable<number> = new Observable<number>(
       (subscriber) => {
         this.http
@@ -152,7 +159,9 @@ export class ApiServiceService {
             surname: surname,
             personalCode: personalCode,
             phoneNumber: phoneNumber,
-            isEmployee: isEmployee,
+            isEmployee: isEmployee
+          }, {
+            headers: headerDict
           })
           .subscribe(
             (response: any) => {
@@ -173,12 +182,16 @@ export class ApiServiceService {
   }
 
   loginUser(name: string, password: string): Observable<number> {
+    let headerDict = new HttpHeaders();
+    headerDict = headerDict.set('Access-Control-Allow-Origin', '*');
     let observable: Observable<number> = new Observable<number>(
       (subscriber) => {
         this.http
           .post(`http://${this.SERVER_DOMAIN}/api/login_user`, {
             email: name,
-            password: password,
+            password: password
+          }, {
+            headers: headerDict
           })
           .subscribe(
             (response: any) => {
@@ -208,11 +221,15 @@ export class ApiServiceService {
   }
 
   logoutUser(name: string): Observable<number> {
+    let headerDict = new HttpHeaders();
+    headerDict = headerDict.set('Access-Control-Allow-Origin', '*');
     let observable: Observable<number> = new Observable<number>(
       (subscriber) => {
         this.http
           .post(`http://${this.SERVER_DOMAIN}/api/logout_user`, {
-            email: name,
+            email: name
+          }, {
+            headers: headerDict
           })
           .subscribe(
             (response: any) => {
@@ -274,6 +291,8 @@ export class ApiServiceService {
   }
 
   updateUser(user: User): Observable<number> {
+    let headerDict = new HttpHeaders();
+    headerDict = headerDict.set('Access-Control-Allow-Origin', '*');
     let userModel: User = {
       name: user.name,
       surname: user.surname,
@@ -293,7 +312,9 @@ export class ApiServiceService {
           mail: user.mail,
           personalCode: user.personalCode,
           phoneNumber: user.phoneNumber,
-          isEmploye: role,
+          isEmploye: role
+        }, {
+          headers: headerDict
         })
         .subscribe(
           (response: any) => {
@@ -317,11 +338,15 @@ export class ApiServiceService {
    * @param type 1 - Main Account, 2- Investment Account, 3- Savings Account
    */
   checkBalance(account: Account, type: 1 | 2 | 3): Observable<number> {
+    let headerDict = new HttpHeaders();
+    headerDict = headerDict.set('Access-Control-Allow-Origin', '*');
     let observable: Observable<number> = new Observable<number>(
       (subscriber) => {
         this.http
           .post(`http://${this.SERVER_DOMAIN}/api/check_balance`, {
-            id: account,
+            id: account
+          }, {
+            headers: headerDict
           })
           .subscribe(
             (response: any) => {
@@ -358,9 +383,14 @@ export class ApiServiceService {
   }
 
   getAllUsers(): Observable<number> {
+    let headerDict = new HttpHeaders();
+    headerDict = headerDict.set('Access-Control-Allow-Origin', '*');
     let observable: Observable<number> = new Observable((subscriber) => {
       this.http
-        .get(`http://${this.SERVER_DOMAIN}/api/admin/get_all_users`)
+        .get(`http://${this.SERVER_DOMAIN}/api/admin/get_all_users`,
+          {
+            headers: headerDict
+          })
         .subscribe(
           (response: any) => {
             if (response.status == 'ok' && response.users) {
@@ -390,9 +420,14 @@ export class ApiServiceService {
   }
 
   getHistory(login: string): Observable<number> {
+    let headerDict = new HttpHeaders();
+    headerDict = headerDict.set('Access-Control-Allow-Origin', '*');
     let observable: Observable<number> = new Observable((subscriber) => {
       this.http
-        .get(`http://${this.SERVER_DOMAIN}/api/get_history/${login}`)
+        .get(`http://${this.SERVER_DOMAIN}/api/get_history/${login}`,
+          {
+          headers: headerDict
+        })
         .subscribe(
           (response: any) => {
             if (response.status == 'ok' && response.history) {
@@ -429,6 +464,8 @@ export class ApiServiceService {
     header: string,
     info: string
   ): Observable<number> {
+    let headerDict = new HttpHeaders();
+    headerDict = headerDict.set('Access-Control-Allow-Origin', '*');
     let observable: Observable<number> = new Observable<number>(
       (subscriber) => {
         this.http
@@ -439,7 +476,9 @@ export class ApiServiceService {
             amount: amount,
             header: header,
             info: info,
-            time: this.getCurrentDateTime(),
+            time: this.getCurrentDateTime()
+          }, {
+            headers: headerDict
           })
           .subscribe(
             (response: any) => {
@@ -459,11 +498,15 @@ export class ApiServiceService {
   }
 
   getUserAccount(name: string): Observable<number> {
+    let headerDict = new HttpHeaders();
+    headerDict = headerDict.set('Access-Control-Allow-Origin', '*');
     let observable: Observable<number> = new Observable<number>(
       (subscriber) => {
         this.http
           .post(`http://${this.SERVER_DOMAIN}/api/get_user_account`, {
-            email: name,
+            email: name
+          }, {
+            headers: headerDict
           })
           .subscribe(
             (response: any) => {
