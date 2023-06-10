@@ -183,7 +183,7 @@ std::vector<User> Operations::getAllUsers() {
 // --------------ACCOUNTS OPERATIONS --------------
 // create account 
 bool Operations::createAccount(Account account) {
-    const char* query = "INSERT INTO accounts (user_id, currency, balance, type, interest_rate) VALUES (?, ?, 200, ?, ?);";
+    const char* query = "INSERT INTO accounts (account_number, user_id, currency, balance, type, interest_rate) VALUES (?, ?, ?, ?, ?, ?);";
 
     sqlite3_stmt* statement;
     database.openDatabase();
@@ -193,10 +193,12 @@ bool Operations::createAccount(Account account) {
     }
 
     // Bind the parameters to the query
-    sqlite3_bind_int(statement, 1, account.userId);
-    sqlite3_bind_text(statement, 2, account.currency.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(statement, 3, account.type.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_double(statement, 4, account.interestRate);
+    sqlite3_bind_int(statement, 1, account.accountNumber);
+    sqlite3_bind_int(statement, 2, account.userId);
+    sqlite3_bind_textdouble(statement, 3, account.currency.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(statement, 4, account.type.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int(statement, 5, account.balance);
+    sqlite3_bind_(statement, 6, account.interestRate);
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);
@@ -209,7 +211,7 @@ bool Operations::createAccount(Account account) {
 bool Operations::createTransfer(Transfer transfer) {
     const char* query = R"(
         INSERT INTO transfers (sender_account_id, recipient_account_id, currency, amount, header, info, time)
-        VALUES (?, ?, ?, ?, ?, ?, datetime('now'));
+        VALUES (?, ?, ?, ?, ?, ?, ?);
     )";
 
     sqlite3_stmt* statement;
@@ -226,6 +228,7 @@ bool Operations::createTransfer(Transfer transfer) {
     sqlite3_bind_double(statement, 4, transfer.amount);
     sqlite3_bind_text(statement, 5, transfer.header.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(statement, 6, transfer.info.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(statement, 7, transfer.time.c_str(), -1, SQLITE_STATIC);
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);
@@ -235,7 +238,7 @@ bool Operations::createTransfer(Transfer transfer) {
 }
 
 // display transfers 
-std::vector<Transfer> Operations::displayUserTransfers(int accountNumber) {
+std::vector<Transfer> Operations::displayUserTransfers(const std::string accountNumber) {
     std::vector<Transfer> transfers;
 
     const char* query = R"(
@@ -268,4 +271,59 @@ std::vector<Transfer> Operations::displayUserTransfers(int accountNumber) {
     database.closeDatabase();
 
     return transfers;
+
+    Account Operations::getAccount(const std::string accountNumber)
+    {
+        const char* query = "SELECT * FROM accounts WHERE account_number = ?;";
+        sqlite3_stmt* statement;
+        database.openDatabase();
+        int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
+        if (result != SQLITE_OK) {
+            return User();
+        }
+
+        // Bind the parameters to the query
+        sqlite3_bind_text(statement, 1, accountNumber.c_str(), -1, SQLITE_STATIC);
+
+        Account account;
+        account.accountNumber = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 1)));
+        account.userId = int(sqlite3_column_int(statement, 2));
+        account.currency = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 3)));
+        account.balance = int(sqlite3_column_int(statement, 4));
+        account.type = string(reinterpret_cast<const char*>(sqlite3_column_text(statement, 4)));
+        account.interestRate = int(sqlite3_column_int(statement, 5));
+
+        sqlite3_finalize(statement);
+        database.closeDatabase();
+
+        return account;
+    }
+
+    bool Operations::uploadAccount(Account account) {
+        const char* query = R"(
+        INSERT INTO accounts (account_number, user_id, currency, balance, type, interest_rate)
+        VALUES (?, ?, ?, ?, ?, ?);
+    )";
+
+        sqlite3_stmt* statement;
+        database.openDatabase();
+        int result = sqlite3_prepare_v2(database.getDatabase(), query, -1, &statement, nullptr);
+        if (result != SQLITE_OK) {
+            return false;
+        }
+
+        // Bind the parameters to the query
+        sqlite3_bind_text(statement, 1, account.accountNumber.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_int(statement, 2, account.userId);
+        sqlite3_bind_text(statement, 3, account.currenct.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_int(statement, 4, account.balance);
+        sqlite3_bind_text(statement, 5, account.type.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(statement, 6, account.interestRate.c_str(), -1, SQLITE_STATIC);
+
+        result = sqlite3_step(statement);
+        sqlite3_finalize(statement);
+        database.closeDatabase();
+
+        return result == SQLITE_DONE;
+    }
 }

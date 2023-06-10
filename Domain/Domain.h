@@ -5,8 +5,7 @@ using namespace std;
 
 struct Account
 {
-	int id;
-	int accountNumber;
+	string accountNumber;
 	int userId;
 	string currency;
 	int balance;

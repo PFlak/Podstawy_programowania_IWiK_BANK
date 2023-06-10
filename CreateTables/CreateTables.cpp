@@ -31,12 +31,12 @@ bool CreateTables::createUserTable() {
 bool CreateTables::createAccountTable() {
 	const char* query = R"(
         CREATE TABLE IF NOT EXISTS accounts (
-            account_number INTEGER PRIMARY KEY,
+            account_number TEXT PRIMARY KEY,
             user_id INTEGER NOT NULL,
             currency TEXT NOT NULL,
             balance INTEGER NOT NULL,
             type TEXT NOT NULL,
-            interest_rate REAL,
+            interest_rate INTEGER,
             FOREIGN KEY (user_id) REFERENCES users (id)
         );
     )";

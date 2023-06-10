@@ -39,7 +39,8 @@ public:
         string personalCode,
         string mail,
         string phoneNumber,
-        UserFactory* factory);
+        UserFactory* factory
+    );
 
     User getUserByMail(const std::string email);
 
@@ -51,6 +52,11 @@ public:
     bool createTransfer(Transfer transfer);
 
     vector<Transfer> displayUserTransfers(int account_number);
+
+    vector<Account> getAccount(int account_number);
+
+    bool uploadAccount(int account_number)
+
 
 private:
     DatabaseConnection database;
