@@ -30,3 +30,8 @@
   top: -17rem;
   left: 24rem;
 }
+
+.accounts-container {
+  overflow-y: hidden;
+  max-height: 30rem;
+}
