@@ -8,20 +8,51 @@
   </div>
 
   <div class="actions-container">
-    <button #accounts class="action-button" [routerLink]="'accounts'" [routerLinkActive]="'active'" (click)="click1()">
+    <button
+      #accounts
+      class="action-button"
+      [routerLink]="['accounts']"
+      [routerLinkActive]="'active'"
+      (click)="click1()"
+    >
       Accounts
     </button>
-    <button #atm class="action-button" [routerLink]="'atm'" [routerLinkActive]="'active'" (click)="click2()">
+    <button
+      #atm
+      class="action-button"
+      [routerLink]="'atm'"
+      [routerLinkActive]="'active'"
+      (click)="click2()"
+    >
       ATM
     </button>
-    <button #transfer class="action-button" [routerLink]="'transfer'" [routerLinkActive]="'active'" (click)="click3()">
+    <button
+      #transfer
+      class="action-button"
+      [routerLink]="'transfer'"
+      [routerLinkActive]="'active'"
+      (click)="click3()"
+    >
       Transfer
     </button>
-    <button #history class="action-button" [routerLink]="'history'" [routerLinkActive]="'active'" (click)="click4()">
+    <button
+      #history
+      class="action-button"
+      [routerLink]="'history'"
+      [routerLinkActive]="'active'"
+      (click)="click4()"
+    >
       History
     </button>
-    <button #admin class="action-button" [routerLink]="'admin'" [disabled]="this.role$ != 'ADMIN'"
-      [class.disactive]="this.role$ != 'ADMIN'" [routerLinkActive]="'active'" (click)="click5()">
+    <button
+      #admin
+      class="action-button"
+      [routerLink]="'admin'"
+      [disabled]="this.role$ != 'ADMIN'"
+      [class.disactive]="this.role$ != 'ADMIN'"
+      [routerLinkActive]="'active'"
+      (click)="click5()"
+    >
       Admin
     </button>
   </div>

@@ -1,33 +1,45 @@
 .admin-container {
-    display: flex;
-    flex-direction: column;
-    row-gap: 0.4rem;
-    overflow-y: auto;
-    height: 100%;
-    width: 100%;
-    padding: 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.4rem;
+  overflow-y: auto;
+  height: 22rem;
+  width: 100%;
 }
 
 .admin-box {
-    width: 95%;
-    height: 2.5rem;
-    padding: 1rem;
-    box-shadow: -6px -6px 2px gray;
-    border: 1px solid gray;
-    transform: translate(6px, 6px);
+  width: 95%;
+  height: 4rem;
+  padding: 1rem;
+  box-shadow: -6px -6px 2px gray;
+  border: 1px solid gray;
+  transform: translate(6px, 6px);
 
-    display: flex;
-    flex-direction: column;
-    row-gap: 0.2rem;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  column-gap: 0.2rem;
+  justify-content: space-between;
+  align-items: center;
 
-    font-size: 0.6rem;
+  font-size: 0.6rem;
 }
 
 .to-flex {
-    display: flex;
-    flex-direction: row;
-    column-gap: 2rem;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  column-gap: 2rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-info {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.1rem;
+  justify-content: center;
+}
+
+.money-button:active {
+  transform: translate(14px, 14px);
+  box-shadow: 1px 1px 3px gray;
 }

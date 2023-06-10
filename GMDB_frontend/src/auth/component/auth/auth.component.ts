@@ -101,6 +101,7 @@ export class AuthComponent {
         (response) => {
           console.log(response);
           this.loginBTN.nativeElement.classList.add('success');
+          this.router.navigate(['home', 'accounts']);
 
           setTimeout(() => {
             this.loginBTN.nativeElement.classList.remove('success');
