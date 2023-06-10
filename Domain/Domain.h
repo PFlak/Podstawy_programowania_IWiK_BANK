@@ -17,7 +17,6 @@ struct Account
 struct User
 {
 	int id;
-	string login;
 	string password;
 	string name;
 	string surname;
