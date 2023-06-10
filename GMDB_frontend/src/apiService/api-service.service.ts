@@ -132,9 +132,8 @@ export class ApiServiceService {
   }
 
   createUser(
-    email: string,
+    mail: string,
     password: string,
-    login: string,
     name: string,
     surname: string,
     personalCode: string,
@@ -145,9 +144,8 @@ export class ApiServiceService {
       (subscriber) => {
         this.http
           .post(`http://${this.SERVER_DOMAIN}/api/create_user`, {
-            email: email,
+            mail: mail,
             password: password,
-            login: login,
             name: name,
             surname: surname,
             personalCode: personalCode,
