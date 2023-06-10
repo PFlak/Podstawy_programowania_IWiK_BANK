@@ -17,6 +17,8 @@ export class ApiServiceService {
   //ONLY FOR ADMIN
   public UserList$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
 
+  public AccountList$: BehaviorSubject<Account[]> = new BehaviorSubject<Account[]>([]);
+
   public Name$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   public Role$: BehaviorSubject<string> = new BehaviorSubject<string>('READER');
 
@@ -559,5 +561,44 @@ export class ApiServiceService {
     const dateTimeString = `${day}.${month}.${year} ${hours}.${minutes}`;
 
     return dateTimeString;
+  }
+
+  getAccounts(name: string): Observable<number> {
+    let headerDict = new HttpHeaders();
+    headerDict = headerDict.set('Access-Control-Allow-Origin', '*');
+    let observable: Observable<number> = new Observable((subscriber) => {
+      this.http
+        .post(`http://${this.SERVER_DOMAIN}/api/admin/get_user_account`,
+          {
+            mail: name
+          },
+          {
+            headers: headerDict
+          })
+        .subscribe(
+          (response: any) => {
+            if (response.status == 'ok' && response.users) {
+              let listOfAccounts: Account[] = [];
+              for (let i = 0; i < response.users.lenght; i++) {
+                let account: Account = {
+                  accountNumber: response.account[i].accountNumber,
+                  currency: response.account[i].currenct,
+                  amount: response.account[i].balance,
+                  type: response.account[i].type,
+                  interestRate: response.account[i].interestRate,
+                };
+                listOfAccounts.push(account);
+              }
+              this.AccountList$.next(listOfAccounts);
+              subscriber.next(200);
+            }
+            subscriber.error(400);
+          },
+          (error: number) => {
+            subscriber.error(error);
+          }
+        );
+    });
+    return observable;
   }
 }
