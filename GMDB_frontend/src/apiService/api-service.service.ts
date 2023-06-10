@@ -276,6 +276,9 @@ export class ApiServiceService {
                 this.deleteValueFromMemory('U_N');
                 this.deleteValueFromMemory('U_R');
                 this.deleteValueFromMemory('U_P');
+
+                this.router.navigateByUrl('/auth');
+
                 subscriber.next(200);
               } else {
                 subscriber.error(400);
