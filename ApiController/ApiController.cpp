@@ -81,7 +81,7 @@ crow::response ApiController::UserController::createUser(const crow::request& re
     }
      
     Operations operations = OperationFactory::CreateOperations();
-    bool success = operations.createUser(login,
+    bool success = operations.createUser(
         password,
         name,
         surname,
@@ -247,12 +247,6 @@ crow::response ApiController::UserController::updateUser(const crow::request& re
         return crow::response(400);
     }
     newUser.password = body["password"].s();
-
-    if (!body.has("login")) {
-        logger.makeLog("api_create_user", "", true, "400");
-        return crow::response(400);
-    }
-    newUser.login = body["login"].s();
 
     if (!body.has("name")) {
         logger.makeLog("api_create_user", "", true, "400");

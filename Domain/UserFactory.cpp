@@ -1,7 +1,7 @@
 #pragma once
 #include "UserFactory.h"
 
-User UserFactory::CreateUser(string login,
+User UserFactory::CreateUser(
 	string password,
 	string name,
 	string surname,

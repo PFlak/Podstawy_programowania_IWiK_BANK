@@ -13,7 +13,6 @@ public:
 
     // --------------USERS OPERATIONS --------------
     bool createUser(
-        string login,
         string password,
         string name,
         string surname,
@@ -24,7 +23,6 @@ public:
     );
 
     bool updateUser(
-        string login,
         string password,
         string name,
         string surname,
@@ -34,7 +32,7 @@ public:
         UserFactory* factory
     );
 
-    bool deleteUser(string login,
+    bool deleteUser(
         string password,
         string name,
         string surname,
