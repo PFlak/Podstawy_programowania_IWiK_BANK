@@ -9,9 +9,9 @@ Expected features were:
 * Inner Class
 * It supposed to be based on C++
 * App is supposed to show work in dedicated GUI or console
-* It needs to save some kind of data to file
+* It needs to save some kind of data to txt file
 
-As a group we decide to go above and beyond to make it as great as possible with our limited work group.
+As a group we decide to go above and beyond to make it as great as possible with our limited work group
 and made features like:
 * Dedicated Gui
 * Admin account to manage users
