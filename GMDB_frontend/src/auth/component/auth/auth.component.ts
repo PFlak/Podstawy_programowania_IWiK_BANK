@@ -26,7 +26,7 @@ export class AuthComponent {
   @ViewChild('mailINPT')
   private mailINPT!: ElementRef;
 
-  @ViewChild('phoneNumberCodeINPT')
+  @ViewChild('phoneNumberINPT')
   private phoneNumberCodeINPT!: ElementRef;
 
   @ViewChild('loginBTN')
@@ -94,7 +94,7 @@ export class AuthComponent {
     setTimeout(() => {
       this.loginBTN.nativeElement.classList.remove('clicked');
     }, 300);
-    const name = this.nameINPT.nativeElement.value;
+    const name = this.loginINPT.nativeElement.value;
     const password = this.passwordINPT.nativeElement.value;
     if (name && password) {
       this.api.loginUser(name, password).subscribe(
@@ -134,27 +134,50 @@ export class AuthComponent {
 
     const name = this.nameINPT.nativeElement.value;
     const password = this.passwordINPT.nativeElement.value;
+    const login = this.nameINPT.nativeElement.value;
+    const surname = this.surnameINPT.nativeElement.value;
+    const mail = this.mailINPT.nativeElement.value;
+    const personalCode = this.personalCodeINPT.nativeElement.value;
+    const phoneNumber = this.phoneNumberCodeINPT.nativeElement.value;
 
-    if (name && password) {
-      this.api.createUser(name, password).subscribe(
-        (response) => {
-          this.signupBTN.nativeElement.classList.add('success');
+    if (
+      name &&
+      password &&
+      login &&
+      surname &&
+      mail &&
+      personalCode &&
+      phoneNumber
+    ) {
+      this.api
+        .createUser(
+          mail,
+          password,
+          login,
+          name,
+          surname,
+          personalCode,
+          phoneNumber
+        )
+        .subscribe(
+          (response) => {
+            this.signupBTN.nativeElement.classList.add('success');
 
-          setTimeout(() => {
-            this.signupBTN.nativeElement.classList.remove('success');
-          }, 500);
-        },
-        (error) => {
-          this.signupBTN.nativeElement.classList.add('error');
+            setTimeout(() => {
+              this.signupBTN.nativeElement.classList.remove('success');
+            }, 500);
+          },
+          (error) => {
+            this.signupBTN.nativeElement.classList.add('error');
 
-          this.nameINPT.nativeElement.value = '';
-          this.passwordINPT.nativeElement.value = '';
+            this.nameINPT.nativeElement.value = '';
+            this.passwordINPT.nativeElement.value = '';
 
-          setTimeout(() => {
-            this.signupBTN.nativeElement.classList.remove('error');
-          }, 500);
-        }
-      );
+            setTimeout(() => {
+              this.signupBTN.nativeElement.classList.remove('error');
+            }, 500);
+          }
+        );
     } else {
       this.signupBTN.nativeElement.classList.add('error');
 
