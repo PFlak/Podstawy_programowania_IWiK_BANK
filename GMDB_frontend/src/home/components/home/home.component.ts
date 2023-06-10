@@ -8,28 +8,28 @@ import { ApiServiceService } from 'src/apiService/api-service.service';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-  @ViewChild('logoutBTN')
-  private logoutBTN!: ElementRef;
+  @ViewChild('logoutBTN', { static: true })
+  private logoutBTN!: ElementRef<HTMLButtonElement>;
 
-  @ViewChild('accounts')
-  private accountsBTN!: ElementRef;
+  @ViewChild('accounts', { static: true })
+  private accountsBTN!: ElementRef<HTMLButtonElement>;
 
-  @ViewChild('atm')
-  private atmBTN!: ElementRef;
+  @ViewChild('atm', { static: true })
+  private atmBTN!: ElementRef<HTMLButtonElement>;
 
-  @ViewChild('transfer')
-  private transferBTN!: ElementRef;
+  @ViewChild('transfer', { static: true })
+  private transferBTN!: ElementRef<HTMLButtonElement>;
 
-  @ViewChild('history')
-  private historyBTN!: ElementRef;
+  @ViewChild('history', { static: true })
+  private historyBTN!: ElementRef<HTMLButtonElement>;
 
-  @ViewChild('admin')
-  private adminBTN!: ElementRef;
+  @ViewChild('admin', { static: true })
+  private adminBTN!: ElementRef<HTMLButtonElement>;
 
   public name$: string = '';
   public role$: string = '';
 
-  constructor(private api: ApiServiceService, private router: Router) {}
+  constructor(private api: ApiServiceService, private router: Router) { }
 
   ngOnInit(): void {
     this.api.Name$.subscribe((response) => {
@@ -38,13 +38,13 @@ export class HomeComponent implements OnInit {
 
     this.api.Role$.subscribe((response) => {
       console.log(response);
-      this.role$ = 'ADMIN';
+      this.role$ = response;
       this.adminCheck(response);
     });
   }
 
   adminCheck(response: string) {
-    if (response == 'ADMIN') {
+    if (response === 'ADMIN') {
       this.adminBTN.nativeElement.classList.remove('disactive');
     } else {
       this.adminBTN.nativeElement.classList.add('disactive');
@@ -82,26 +82,30 @@ export class HomeComponent implements OnInit {
       this.accountsBTN.nativeElement.classList.remove('clicked');
     }, 300);
   }
+
   click2() {
     this.atmBTN.nativeElement.classList.add('clicked');
     setTimeout(() => {
       this.atmBTN.nativeElement.classList.remove('clicked');
     }, 300);
   }
+
   click3() {
     this.transferBTN.nativeElement.classList.add('clicked');
     setTimeout(() => {
       this.transferBTN.nativeElement.classList.remove('clicked');
     }, 300);
   }
+
   click4() {
     this.historyBTN.nativeElement.classList.add('clicked');
     setTimeout(() => {
       this.historyBTN.nativeElement.classList.remove('clicked');
     }, 300);
   }
+
   click5() {
-    if (this.role$ == 'ADMIN') {
+    if (this.role$ === 'ADMIN') {
       this.adminBTN.nativeElement.classList.remove('disactive');
       this.adminBTN.nativeElement.classList.add('clicked');
       setTimeout(() => {

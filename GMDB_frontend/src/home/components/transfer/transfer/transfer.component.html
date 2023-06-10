@@ -1,1 +1,49 @@
-<p>transfer works!</p>
+<div class="transfer-flex">
+    <div class="account-container">
+        <div class="account-box">
+            <div class="account-header">Main Account</div>
+            <div class="account-number">
+                <a>{{ this.mainAccount.accountNumber }}</a><a>{{ this.mainAccount.amount }} {{ this.mainAccount.currency
+                    }}</a>
+            </div>
+        </div>
+        <button #mainBTN (click)="click1()" class="action-button active">
+            Select
+        </button>
+    </div>
+    <div class="account-container">
+        <div class="account-box">
+            <div class="account-header">Savings Account</div>
+            <div class="account-number">
+                <a>{{ this.savingsAccount.accountNumber }}</a><a>{{ this.savingsAccount.amount }}
+                    {{this.savingsAccount.currency}}</a>
+            </div>
+        </div>
+        <button #savingsBTN (click)="click2()" class="action-button">Select</button>
+    </div>
+    <div class="account-container">
+        <div class="account-box">
+            <div class="account-header">Investment Account</div>
+            <div class="account-number">
+                <a>{{ this.investmentAccount.accountNumber }}</a><a>{{ this.investmentAccount.amount }}
+                    {{this.investmentAccount.currency }}</a>
+            </div>
+        </div>
+        <button #investmentBTN (click)="click3()" class="action-button">
+            Select
+        </button>
+    </div>
+    <div class="input-container">
+        <label for="accountNumber">account number</label>
+        <input #accountNumberINPT type="string" class="standard-input" name="accountNumber" required />
+        <label for="amount">amount</label>
+        <input #amountINPT type="number" class="standard-input" name="amount" required />
+        <label for="title">title</label>
+        <input #headerINPT type="string" class="standard-input" name="title" required />
+        <label for="description">description</label>
+        <input #infoINPT type="string" class="standard-input" name="description" required />
+        <div class="button-container">
+            <button #payinBTN class="money-button" (click)="transfer()">Send</button>
+        </div>
+    </div>
+</div>

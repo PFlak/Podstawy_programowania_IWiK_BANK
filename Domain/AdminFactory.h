@@ -5,7 +5,7 @@
 class AdminFactory : public UserFactory
 {
 public:
-		User CreateUser(string login,
+		User CreateUser(
 		string password,
 		string name,
 		string surname,

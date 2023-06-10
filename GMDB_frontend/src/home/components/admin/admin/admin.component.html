@@ -1,1 +1,10 @@
-<p>admin works!</p>
+<div class="admin-container">
+    <div class="admin-box" *ngFor="let item of this.users">
+        <div>First name: {{ item.name }}</div>
+        <div>Surname: {{ item.surname }}</div>
+        <div>E-mail: {{ item.mail }}</div>
+        <div>Personal Code: {{ item.personalCode }}</div>
+        <div>Phone number: {{ item.phoneNumber }}</div>
+        Admin: <input type="checkbox" [checked]="item.role === 'ADMIN'" />
+    </div>
+</div>

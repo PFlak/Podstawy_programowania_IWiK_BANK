@@ -4,7 +4,7 @@
 class UserFactory
 {
 public:
-	virtual User CreateUser(string login,
+	virtual User CreateUser(
 	string password,
 	string name,
 	string surname,

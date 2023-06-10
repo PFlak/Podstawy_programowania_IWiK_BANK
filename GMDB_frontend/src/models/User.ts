@@ -1,5 +1,9 @@
 export interface User {
-  name?: string;
   password?: string;
+  name: string;
+  surname: string;
+  mail: string;
+  personalCode: number;
+  phoneNumber: number;
   role?: 'USER' | 'ADMIN' | 'READER';
 }

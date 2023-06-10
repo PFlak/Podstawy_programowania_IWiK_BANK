@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable, Subscriber, subscribeOn } from 'rxjs';
 import { User } from 'src/models/User';
 import { Account } from 'src/models/Account';
 import { History } from 'src/models/History';
+import { getLocaleDateFormat } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -19,28 +20,35 @@ export class ApiServiceService {
   public Name$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   public Role$: BehaviorSubject<string> = new BehaviorSubject<string>('READER');
 
-  public MainAccount$: BehaviorSubject<string> = new BehaviorSubject<string>(
-    ''
+  public MainAccount$: BehaviorSubject<Account> = new BehaviorSubject<Account>(
+    { amount: 0, currency: '', accountNumber: '' }
   );
-  public MainAccountValue$: BehaviorSubject<number> =
-    new BehaviorSubject<number>(0);
 
-  public InvestmentAccount$: BehaviorSubject<string> =
-    new BehaviorSubject<string>('');
-  public InvestmentAccountValue$: BehaviorSubject<number> =
-    new BehaviorSubject<number>(0);
-
-  public SavingsAccount$: BehaviorSubject<string> = new BehaviorSubject<string>(
-    ''
+  public InvestmentAccount$: BehaviorSubject<Account> = new BehaviorSubject<Account>(
+    { amount: 0, currency: '', accountNumber: '' }
   );
-  public SavingsAccountValue$: BehaviorSubject<number> =
-    new BehaviorSubject<number>(0);
+
+  public SavingsAccount$: BehaviorSubject<Account> = new BehaviorSubject<Account>(
+    { amount: 0, currency: '', accountNumber: '' }
+  );
+
+  public MainAccountValue$: BehaviorSubject<Account> = new BehaviorSubject<Account>(
+    { amount: 0, currency: '', accountNumber: '' }
+  );
+
+  public InvestmentAccountValue$: BehaviorSubject<Account> = new BehaviorSubject<Account>(
+    { amount: 0, currency: '', accountNumber: '' }
+  );
+
+  public SavingsAccountValue$: BehaviorSubject<Account> = new BehaviorSubject<Account>(
+    { amount: 0, currency: '', accountNumber: '' }
+  );
 
   public TransactionHistory$: BehaviorSubject<History[]> = new BehaviorSubject<
     History[]
   >([]);
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   setValueToMemory(key: string, value: string) {
     let encrypted_value = btoa(value);
@@ -168,62 +176,83 @@ export class ApiServiceService {
   }
 
   logoutUser(name: string): Observable<number> {
-    let observable: Observable<number> = new Observable<number>(
-      (subscriber) => {
-        this.http
-          .post(`http://${this.SERVER_DOMAIN}/api/logout_user`, {
-            email: name,
-          })
-          .subscribe(
-            (response: any) => {
-              if (response.status && response.status == 'ok') {
-                this.Name$.next('');
-                this.Role$.next('READER');
+    let observable: Observable<number> = new Observable<number>((subscriber) => {
+      this.http
+        .post(`http://${this.SERVER_DOMAIN}/api/logout_user`, {
+          email: name,
+        })
+        .subscribe(
+          (response: any) => {
+            if (response.status && response.status == 'ok') {
+              this.Name$.next('');
+              this.Role$.next('READER');
 
-                this.InvestmentAccount$.next('');
-                this.InvestmentAccountValue$.next(0);
+              this.InvestmentAccount$.next({
+                amount: 0,
+                currency: '',
+                accountNumber: '',
+              });
+              this.InvestmentAccountValue$.next({
+                amount: 0,
+                currency: '',
+                accountNumber: '',
+              });
 
-                this.MainAccount$.next('');
-                this.MainAccountValue$.next(0);
+              this.MainAccount$.next({
+                amount: 0,
+                currency: '',
+                accountNumber: '',
+              });
+              this.MainAccountValue$.next({
+                amount: 0,
+                currency: '',
+                accountNumber: '',
+              });
 
-                this.SavingsAccount$.next('');
-                this.SavingsAccountValue$.next(0);
+              this.SavingsAccount$.next({
+                amount: 0,
+                currency: '',
+                accountNumber: '',
+              });
+              this.SavingsAccountValue$.next({
+                amount: 0,
+                currency: '',
+                accountNumber: '',
+              });
 
-                this.TransactionHistory$.next([]);
-                this.UserList$.next([]);
+              this.TransactionHistory$.next([]);
+              this.UserList$.next([]);
 
-                this.deleteValueFromMemory('U_N');
-                this.deleteValueFromMemory('U_R');
-                this.deleteValueFromMemory('U_P');
-                subscriber.next(200);
-              } else {
-                subscriber.error(400);
-              }
-            },
-            (error: number) => {
-              subscriber.error(error);
+              this.deleteValueFromMemory('U_N');
+              this.deleteValueFromMemory('U_R');
+              this.deleteValueFromMemory('U_P');
+              subscriber.next(200);
+            } else {
+              subscriber.error(400);
             }
-          );
-      }
-    );
+          },
+          (error: any) => {
+            subscriber.error(error.status);
+          }
+        );
+    });
     return observable;
   }
 
-  updateUser(
-    name: string | undefined,
-    password: string | undefined,
-    role: string | undefined
-  ): Observable<number> {
-    let name_ = name ? name : this.getValueFromMemory('U_N');
-    let password_ = password ? password : this.getValueFromMemory('U_P');
-    let role_ = role ? role : this.getValueFromMemory('U_R');
+  updateUser(user: User): Observable<number> {
+    let userModel: User = {
+      name: user.name,
+      surname: user.surname,
+      mail: user.mail,
+      personalCode: user.personalCode,
+      phoneNumber: user.phoneNumber,
+      role: user.role
+    }
 
     let observable = new Observable<number>((subscriber) => {
       this.http
-        .post(`http://${this.SERVER_DOMAIN}/api/update_user`, {
-          email: name_,
-          password: password_,
-          role: role_,
+        .post(`http://${this.SERVER_DOMAIN}/api/`, {
+          user: userModel
         })
         .subscribe(
           (response: any) => {
@@ -246,37 +275,42 @@ export class ApiServiceService {
    * @param account Account number
    * @param type 1 - Main Account, 2- Investment Account, 3- Savings Account
    */
-  checkBalance(account: string, type: 1 | 2 | 3): Observable<number> {
-    let observable: Observable<number> = new Observable<number>(
-      (subscriber) => {
-        this.http
-          .post(`http://${this.SERVER_DOMAIN}/api/check_balance`, {
-            id: account,
-          })
-          .subscribe(
-            (response: any) => {
-              if (response.status == 'ok' && response.credits) {
-                switch (type) {
-                  case 1:
-                    this.MainAccountValue$.next(response.credits);
-                    break;
-                  case 2:
-                    this.InvestmentAccountValue$.next(response.credits);
-                    break;
-                  case 3:
-                    this.SavingsAccountValue$.next(response.credits);
-                    break;
-                }
-                subscriber.next(200);
+  checkBalance(account: Account, type: 1 | 2 | 3): Observable<number> {
+    let observable: Observable<number> = new Observable<number>((subscriber) => {
+      this.http
+        .post(`http://${this.SERVER_DOMAIN}/api/check_balance`, {
+          id: account,
+        })
+        .subscribe(
+          (response: any) => {
+            if (response.status == 'ok' && response.credits) {
+              const accountValue: Account = {
+                amount: response.credits.amount,
+                currency: response.credits.currency,
+                accountNumber: response.credits.accountNumber,
+              };
+
+              switch (type) {
+                case 1:
+                  this.MainAccountValue$.next(accountValue);
+                  break;
+                case 2:
+                  this.InvestmentAccountValue$.next(accountValue);
+                  break;
+                case 3:
+                  this.SavingsAccountValue$.next(accountValue);
+                  break;
               }
+              subscriber.next(200);
+            } else {
               subscriber.error(400);
-            },
-            (error: number) => {
-              subscriber.error(error);
             }
-          );
-      }
-    );
+          },
+          (error: any) => {
+            subscriber.error(error.status);
+          }
+        );
+    });
     return observable;
   }
 
@@ -291,7 +325,11 @@ export class ApiServiceService {
               for (let i = 0; i < response.users.lenght; i++) {
                 let user: User = {
                   name: response.users[i].email,
-                  role: response.users[i].role,
+                  surname: response.users[i].email,
+                  mail: response.users[i].email,
+                  phoneNumber: response.users[i].email,
+                  personalCode: response.users[i].email,
+                  role: response.users[i].isEmployee ? "USER" : "ADMIN",
                 };
                 listOfUsers.push(user);
               }
@@ -308,10 +346,10 @@ export class ApiServiceService {
     return observable;
   }
 
-  getHistory(name: string): Observable<number> {
+  getHistory(login: string): Observable<number> {
     let observable: Observable<number> = new Observable((subscriber) => {
       this.http
-        .get(`http://${this.SERVER_DOMAIN}/api/get_history/${name}`)
+        .get(`http://${this.SERVER_DOMAIN}/api/get_history/${login}`)
         .subscribe(
           (response: any) => {
             if (response.status == 'ok' && response.history) {
@@ -321,6 +359,9 @@ export class ApiServiceService {
                   from: response.history[i].from,
                   to: response.history[i].to,
                   amount: response.history[i].amount,
+                  header: response.history[i].header,
+                  info: response.history[i].info,
+                  time: response.history[i].time,
                 };
                 listOfHistory.push(history);
               }
@@ -337,14 +378,18 @@ export class ApiServiceService {
     return observable;
   }
 
-  transfer(from: string, to: string, amount: number): Observable<number> {
+  transfer(from: string, to: string, currency: string, amount: number, header: string, info: string): Observable<number> {
     let observable: Observable<number> = new Observable<number>(
       (subscriber) => {
         this.http
           .post(`http://${this.SERVER_DOMAIN}/api/transfer`, {
             from: from,
             to: to,
+            currency: currency,
             amount: amount,
+            header: header,
+            info: info,
+            time: this.getCurrentDateTime()
           })
           .subscribe(
             (response: any) => {
@@ -404,5 +449,19 @@ export class ApiServiceService {
       }
     );
     return observable;
+  }
+
+  getCurrentDateTime(): string {
+    const now = new Date();
+
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // January is 0
+    const year = String(now.getFullYear());
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+
+    const dateTimeString = `${day}.${month}.${year} ${hours}.${minutes}`;
+
+    return dateTimeString;
   }
 }

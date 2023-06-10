@@ -10,7 +10,6 @@ User AdminFactory::CreateUser(string login,
 	string phoneNumber)
 {
 	User user;
-	user.login = login;
 	user.password = password;
 	user.name = name;
 	user.surname = name;

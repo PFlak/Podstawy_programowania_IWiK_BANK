@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ApiServiceService } from 'src/apiService/api-service.service';
+import { Account } from 'src/models/Account';
 
 @Component({
   selector: 'app-atm',
@@ -19,21 +20,23 @@ export class AtmComponent {
   @ViewChild('amountINPT')
   private amountINPT!: ElementRef;
 
+  @ViewChild('headerINPT')
+  private headerINPT!: ElementRef;
+
+  @ViewChild('infoINPT')
+  private infoINPT!: ElementRef;
+
   @ViewChild('payinBTN')
   private inBTN!: ElementRef;
 
   @ViewChild('payoutBTN')
   private outBTN!: ElementRef;
 
-  public mainAccount: string = '';
-  public savingsAccount: string = '';
-  public investmentAccount: string = '';
+  public mainAccount: Account = { amount: 0, currency: '', accountNumber: '' }
+  public savingsAccount: Account = { amount: 0, currency: '', accountNumber: '' };
+  public investmentAccount: Account = { amount: 0, currency: '', accountNumber: '' };
 
-  public mainValue: number = 0;
-  public savingsValue: number = 0;
-  public investmentValue: number = 0;
-
-  private accountDest: string = '';
+  private accountDest: Account = { amount: 0, currency: 'PLN', accountNumber: '' };
 
   constructor(private api: ApiServiceService) {
     this.api.MainAccount$.subscribe((response) => {
@@ -50,15 +53,15 @@ export class AtmComponent {
     });
 
     this.api.MainAccountValue$.subscribe((response) => {
-      this.mainValue = response;
+      this.mainAccount = response;
     });
 
     this.api.SavingsAccountValue$.subscribe((response) => {
-      this.savingsValue = response;
+      this.mainAccount = response;
     });
 
     this.api.InvestmentAccountValue$.subscribe((response) => {
-      this.investmentValue = response;
+      this.mainAccount = response;
     });
   }
 
@@ -103,12 +106,15 @@ export class AtmComponent {
       this.inBTN.nativeElement.classList.remove('clicked');
     }, 300);
 
-    if (this.accountDest != '' && this.amountINPT.nativeElement.value) {
+    if (this.accountDest != null && this.amountINPT.nativeElement.value) {
       this.api
         .transfer(
+          this.accountDest.accountNumber,
           '000000000000000000',
-          this.accountDest,
-          this.amountINPT.nativeElement.value
+          this.accountDest.currency,
+          this.amountINPT.nativeElement.value,
+          this.headerINPT.nativeElement.value,
+          this.infoINPT.nativeElement.value
         )
         .subscribe(
           (response) => {
@@ -151,12 +157,15 @@ export class AtmComponent {
       this.outBTN.nativeElement.classList.remove('clicked');
     }, 300);
 
-    if (this.accountDest.length != 0 && this.amountINPT.nativeElement.value) {
+    if (this.accountDest.amount != 0 && this.amountINPT.nativeElement.value) {
       this.api
         .transfer(
-          this.accountDest,
+          this.accountDest.accountNumber,
           '000000000000000000',
-          this.amountINPT.nativeElement.value
+          this.accountDest.currency,
+          this.amountINPT.nativeElement.value,
+          this.headerINPT.nativeElement.value,
+          this.infoINPT.nativeElement.value
         )
         .subscribe(
           (response) => {

@@ -1,0 +1,33 @@
+.admin-container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.4rem;
+    overflow-y: auto;
+    height: 100%;
+    width: 100%;
+    padding: 1rem 1rem;
+}
+
+.admin-box {
+    width: 95%;
+    height: 2.5rem;
+    padding: 1rem;
+    box-shadow: -6px -6px 2px gray;
+    border: 1px solid gray;
+    transform: translate(6px, 6px);
+
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.2rem;
+    justify-content: space-between;
+
+    font-size: 0.6rem;
+}
+
+.to-flex {
+    display: flex;
+    flex-direction: row;
+    column-gap: 2rem;
+    justify-content: space-between;
+    align-items: center;
+}

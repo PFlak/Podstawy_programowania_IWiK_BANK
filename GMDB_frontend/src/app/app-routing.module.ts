@@ -11,7 +11,7 @@ import { TransferComponent } from 'src/home/components/transfer/transfer/transfe
 const routes: Routes = [
   {
     path: '',
-    component: AuthComponent,
+    component: HomeComponent,
     data: { title: 'GMDBP' },
   },
   {
@@ -46,10 +46,37 @@ const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'accounts',
+    component: AccountsComponent,
+    data: { title: 'GMDBP | accounts' },
+  },
+  {
+    path: 'atm',
+    component: AtmComponent,
+    data: { title: 'GMDBP | atm' },
+  },
+  {
+    path: 'transfer',
+    component: TransferComponent,
+    data: { title: 'GMDBP | transfer' },
+  },
+  {
+    path: 'admin',
+    component: AdminComponent,
+    data: { title: 'GMDBP | admin' },
+  },
+  {
+    path: 'history',
+    component: HistoryComponent,
+    data: { title: 'GMDBP | history' },
+  },
 ];
+
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

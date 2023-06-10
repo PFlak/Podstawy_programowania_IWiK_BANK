@@ -8,11 +8,26 @@ import { ApiServiceService } from 'src/apiService/api-service.service';
   styleUrls: ['./auth.component.css'],
 })
 export class AuthComponent {
+  @ViewChild('loginINPT')
+  private loginINPT!: ElementRef;
+
   @ViewChild('nameINPT')
   private nameINPT!: ElementRef;
 
+  @ViewChild('surnameINPT')
+  private surnameINPT!: ElementRef;
+
   @ViewChild('passwordINPT')
   private passwordINPT!: ElementRef;
+
+  @ViewChild('personalCodeINPT')
+  private personalCodeINPT!: ElementRef;
+
+  @ViewChild('mailINPT')
+  private mailINPT!: ElementRef;
+
+  @ViewChild('phoneNumberCodeINPT')
+  private phoneNumberCodeINPT!: ElementRef;
 
   @ViewChild('loginBTN')
   private loginBTN!: ElementRef;
@@ -27,6 +42,12 @@ export class AuthComponent {
   private signACT!: ElementRef;
 
   click1() {
+    const element = document.querySelector('.auth-container') as HTMLElement;
+
+    if (element) {
+      element.style.height = '30rem';
+    }
+
     this.loginACT.nativeElement.classList.add('clicked');
     this.signACT.nativeElement.classList.remove('active');
 
@@ -38,6 +59,12 @@ export class AuthComponent {
   }
 
   click2() {
+    const element = document.querySelector('.auth-container') as HTMLElement;
+
+    if (element) {
+      element.style.height = '50rem';
+    }
+
     this.signACT.nativeElement.classList.add('clicked');
     this.loginACT.nativeElement.classList.remove('active');
 
