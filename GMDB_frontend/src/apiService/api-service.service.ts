@@ -570,7 +570,7 @@ export class ApiServiceService {
       this.http
         .post(`http://${this.SERVER_DOMAIN}/api/get_user_account`,
           {
-            mail: name
+            email: name
           },
           {
             headers: headerDict
