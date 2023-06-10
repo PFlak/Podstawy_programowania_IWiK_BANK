@@ -49,13 +49,19 @@ To even start instalation process you need to have nodeJS
   ```sh
   npm install -g @angular/cli@15.0.4
    ```
+   
+3. Install packages
+ 
+  ```sh
+  ./GMDB_frontend npm install
+   ```
 
-3. Start Server
+4. Start Server
 
    ```js
-    ng serve
+   ./GMDB_frontend ng serve
    ```
-4. Go to http://localhost:18080 to access your bank app
+5. Go to http://localhost:18080 to access your bank app
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
