@@ -93,20 +93,6 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
-[git.dev]: https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white
-[linked.dev]: https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white
-
-[sars2-url]: https://www.linkedin.com/in/marcin-gut-borowy-4b4854203/
-[milosz2-url]:  https://www.linkedin.com/in/mi%C5%82osz-rzyczniak-b68175253/
-[flak2-url]: https://www.linkedin.com/in/krzysztof-broniak-2283b3246/
-[michal2-url]: https://www.linkedin.com/in/krzysztof-broniak-2283b3246/
-[broniak2-url]: https://www.linkedin.com/in/krzysztof-broniak-2283b3246/
-
-[sars-url]: https://github.com/SARSUnicorn
-[milosz-url]: https://github.com/Rzyczu
-[flak-url]: https://github.com/PFlak
-[michal-url]: https://github.com/Trejden
-[broniak-url]:  https://github.com/SARSUnicorn
 
 [vs.dev]:https://img.shields.io/badge/Visual%20Studio-v1.0.2-purple?style=for-the-badge
 [vs-url]:https://visualstudio.microsoft.com/pl/
@@ -118,6 +104,21 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 [crow-url]:https://crowcpp.org/
 [sqlite.dev]:https://img.shields.io/badge/sqlite-v3-yellow?style=for-the-badge
 [sqlite-url]:https://www.sqlite.org/index.html
+
+[sars-url]: https://github.com/SARSUnicorn
+[milosz-url]: https://github.com/Rzyczu
+[flak-url]: https://github.com/PFlak
+[michal-url]: https://github.com/Trejden
+[broniak-url]:  https://github.com/SARSUnicorn
+
+[git.dev]: https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white
+[linked.dev]: https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white
+
+[sars2-url]: https://www.linkedin.com/in/marcin-gut-borowy-4b4854203/
+[milosz2-url]:  https://www.linkedin.com/in/mi%C5%82osz-rzyczniak-b68175253/
+[flak2-url]: https://www.linkedin.com/in/krzysztof-broniak-2283b3246/
+[michal2-url]: https://www.linkedin.com/in/krzysztof-broniak-2283b3246/
+[broniak2-url]: https://www.linkedin.com/in/krzysztof-broniak-2283b3246/
 
 [node.dev]:https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white
 [node-url]:https://nodejs.org/en
