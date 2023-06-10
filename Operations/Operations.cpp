@@ -187,7 +187,7 @@ std::vector<User> Operations::getAllUsers() {
 // --------------ACCOUNTS OPERATIONS --------------
 // create account 
 bool Operations::createAccount(Account account) {
-    const char* query = "INSERT INTO accounts (user_id, currency, balance, type, interest_rate) VALUES (?, ?, ?, ?, ?);";
+    const char* query = "INSERT INTO accounts (user_id, currency, balance, type, interest_rate) VALUES (?, ?, 200, ?, ?);";
 
     sqlite3_stmt* statement;
     database.openDatabase();
@@ -199,9 +199,8 @@ bool Operations::createAccount(Account account) {
     // Bind the parameters to the query
     sqlite3_bind_int(statement, 1, account.userId);
     sqlite3_bind_text(statement, 2, account.currency.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_int(statement, 3, account.balance);
-    sqlite3_bind_text(statement, 4, account.type.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_double(statement, 5, account.interestRate);
+    sqlite3_bind_text(statement, 3, account.type.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_double(statement, 4, account.interestRate);
 
     result = sqlite3_step(statement);
     sqlite3_finalize(statement);

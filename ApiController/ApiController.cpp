@@ -40,12 +40,6 @@ crow::response ApiController::UserController::createUser(const crow::request& re
     }
     std::string password = body["password"].s();
 
-    if (!body.has("login")) {
-        logger.makeLog("api_create_user", "", true, "400");
-        return crow::response(400);
-    }
-    std::string login = body["login"].s();
-
     if (!body.has("name")) {
         logger.makeLog("api_create_user", "", true, "400");
         return crow::response(400);
@@ -86,7 +80,7 @@ crow::response ApiController::UserController::createUser(const crow::request& re
         factory = new UserFactory();
     }
      
-    Operations operations = OperationFactory::CreateOperations(); //TO DO constructor needed?
+    Operations operations = OperationFactory::CreateOperations();
     bool success = operations.createUser(login,
         password,
         name,
@@ -100,6 +94,27 @@ crow::response ApiController::UserController::createUser(const crow::request& re
     int status_code;
     if (success)
     {
+        User user = operations.getUserByMail(mail);
+        Account account1;
+        Account account2;
+        Account account3;
+        account1.userId = user.Id;
+        account2.userId = user.Id;
+        account3.userId = user.Id;
+        account1.currency = "PLN";
+        account2.currency = "PLN";
+        account3.currency = "EUR";
+        account1.type = "konto g³ówne";
+        account2.type = "konto oszczêdnoœciowe";
+        account3.type = "konto walutowe";
+        account1.interestRate = 1;
+        account2.interestRate = 2;
+        account3.interestRate = 1;
+
+        operations.createAccount(account1);
+        operations.createAccount(account2);
+        operations.createAccount(account3);
+
         responseJson["status"] = "ok";
         status_code = 200;
     }
@@ -323,7 +338,9 @@ crow::response ApiController::AccountController::checkBalance(const crow::reques
 }
 
 crow::response ApiController::UserController::getAllUsers(Logger logger) {
-
+    Operations operations = OperationFactory::CreateOperations();
+    vector<User> users = operations.getAllUsers();
+    //to do serialize the list to json somehow, somewhen....
     crow::json::wvalue responseJson;
     responseJson["status"] = "ok";
     // responseJson["users"] = { {{"email", "abcd@domain.com"}, {"role", "USER"}}, {{"email", "ergh@domain.com"}, {"role", "ADMIN"}} };
