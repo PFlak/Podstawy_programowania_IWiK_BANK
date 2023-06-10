@@ -392,7 +392,7 @@ export class ApiServiceService {
     headerDict = headerDict.set('Access-Control-Allow-Origin', '*');
     let observable: Observable<number> = new Observable((subscriber) => {
       this.http
-        .get(`http://${this.SERVER_DOMAIN}/api/admin/get_all_users`,
+        .get(`http://${this.SERVER_DOMAIN}/api/get_all_users`,
           {
             headers: headerDict
           })
