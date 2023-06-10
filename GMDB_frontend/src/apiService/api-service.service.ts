@@ -577,9 +577,9 @@ export class ApiServiceService {
           })
         .subscribe(
           (response: any) => {
-            if (response.status == 'ok' && response.users) {
+            if (response.status == 'ok' && response.account) {
               let listOfAccounts: Account[] = [];
-              for (let i = 0; i < response.users.lenght; i++) {
+              for (let i = 0; i < response.account.lenght; i++) {
                 let account: Account = {
                   accountNumber: response.account[i].accountNumber,
                   currency: response.account[i].currenct,
