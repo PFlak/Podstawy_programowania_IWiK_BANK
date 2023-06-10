@@ -115,7 +115,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 [milosz-url]: https://github.com/Rzyczu
 [flak-url]: https://github.com/PFlak
 [michal-url]: https://github.com/Trejden
-[broniak-url]:  https://github.com/SARSUnicorn
+[broniak-url]:  https://github.com/Drijgon1
 
 [git.dev]: https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white
 [linked.dev]: https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white
