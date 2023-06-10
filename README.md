@@ -58,8 +58,8 @@ To even start instalation process you need to have nodeJS
 
 4. Start Server
 
-   ```js
-   ./GMDB_frontend ng serve
+  ```sh
+  ./GMDB_frontend ng serve
    ```
 5. Go to http://localhost:18080 to access your bank app
 
