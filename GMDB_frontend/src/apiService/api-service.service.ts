@@ -568,7 +568,7 @@ export class ApiServiceService {
     headerDict = headerDict.set('Access-Control-Allow-Origin', '*');
     let observable: Observable<number> = new Observable((subscriber) => {
       this.http
-        .post(`http://${this.SERVER_DOMAIN}/api/admin/get_user_account`,
+        .post(`http://${this.SERVER_DOMAIN}/api/get_user_account`,
           {
             mail: name
           },
